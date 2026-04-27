@@ -516,7 +516,7 @@
     .calendar-day.selected { background: var(--indigo); color: white; }
     .calendar-day.other-month { color: var(--text-muted); opacity: 0.5; }
 
-    /* Make sure all text has proper color in dark mode */
+   
     [data-theme="dark"] .btn {
       color: var(--text-primary);
     }
@@ -751,7 +751,7 @@
 
 <script>
   (function(){
-    // State - COMPLETELY EMPTY
+    // State
     let state = {
       transactions: [],
       budgets: [],
@@ -1063,7 +1063,7 @@
       refreshAll();
     };
 
-    // Close calendar when clicking outside
+    // Close calendar
     document.addEventListener('click', function(e) {
       const calendar = document.getElementById('calendarDropdown');
       const badge = document.querySelector('.month-badge');
@@ -1234,7 +1234,7 @@
       document.documentElement.setAttribute('data-theme', 'dark');
     }
 
-    // Load data or show onboarding
+    // Load data
     const hasData = load();
     if (hasData && (state.transactions.length > 0 || state.budgets.length > 0)) {
       document.getElementById('onboarding').style.display = 'none';
@@ -1243,7 +1243,7 @@
     refreshAll();
     window.setType('expense');
     
-    // Close modals on backdrop click
+    // Close modals
     document.querySelectorAll('.modal-backdrop').forEach(el => {
       el.addEventListener('click', (e) => { if (e.target === el) el.classList.remove('open'); });
     });
