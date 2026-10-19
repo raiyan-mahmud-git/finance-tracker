@@ -2,7 +2,7 @@
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
-  <!-- Bug 11 Fix: Removed contradictory maximum-scale=1 with user-scalable=yes -->
+ 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Flo — Personal Finance Tracker</title>
   <meta name="description" content="A clean, private, offline-first personal finance tracker with zero paid dependencies.">
@@ -13,7 +13,7 @@
   <link rel="icon" type="image/png" href="flo-logo.png">
   <link rel="apple-touch-icon" href="flo-logo.png">
 
-  <!-- Google Fonts: Syne + DM Sans with system fallback for full offline capability -->
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Space+Grotesk:wght@500;700&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -23,7 +23,7 @@
 </head>
 <body>
 
-  <!-- Mobile Bottom Tab Bar (Phase 4 UX) -->
+  <!-- Mobile Bottom Tab Bar -->
   <nav class="bottom-tab-bar" aria-label="Mobile Navigation">
     <button class="tab-btn active" data-view="dashboard" aria-label="Dashboard">
       <span aria-hidden="true">📊</span>
@@ -119,19 +119,19 @@
     <section class="view" id="view-settings" aria-label="Settings View"></section>
   </main>
 
-  <!-- Add+ FAB Button (Styled prominent with label and + icon) -->
+  <!-- Add+ FAB Button -->
   <button class="fab" id="fabBtn" aria-label="Add new transaction (Shortcut: N)">
     <span aria-hidden="true" style="font-size:22px; line-height:1;">+</span>
     <span>Add</span>
   </button>
 
-  <!-- Floating Toast with Undo Action -->
+  <!-- Floating Toast -->
   <aside class="toast-container" id="toastContainer" role="status" aria-live="polite">
     <span id="toastMessage">Action completed</span>
     <button class="toast-undo-btn" id="toastUndoBtn">Undo</button>
   </aside>
 
-  <!-- ==================== MODALS ==================== -->
+  <!-- MODALS -->
 
   <!-- Add / Edit Transaction Modal -->
   <div class="modal-backdrop" id="txnModal" role="dialog" aria-modal="true" aria-labelledby="txnModalTitle">
@@ -265,7 +265,7 @@
     </div>
   </div>
 
-  <!-- Import Preview Modal (Bug 8 Fix) -->
+  <!-- Import Preview Modal -->
   <div class="modal-backdrop" id="importModal" role="dialog" aria-modal="true" aria-labelledby="importModalTitle">
     <div class="modal">
       <div class="modal-header">
@@ -280,7 +280,7 @@
     </div>
   </div>
 
-  <!-- Vanilla ES Module Entry Script (No build step required) -->
+  <!-- Vanilla ES Module Entry Script -->
   <script type="module" src="js/main.js"></script>
 </body>
 </html>

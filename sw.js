@@ -35,14 +35,14 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Cache first with network fallback for local assets
+  
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
         return cachedResponse;
       }
       return fetch(event.request).then((networkResponse) => {
-        // Cache external fonts or resources dynamically if fetched
+        // Cache external fonts
         if (event.request.url.startsWith('http') && networkResponse.status === 200) {
           const responseToCache = networkResponse.clone();
           caches.open(CACHE_NAME).then((cache) => {
@@ -51,7 +51,7 @@ self.addEventListener('fetch', (event) => {
         }
         return networkResponse;
       }).catch(() => {
-        // Return offline fallback if network fails
+        // offline fallback
         if (event.request.mode === 'navigate') {
           return caches.match('./index.html');
         }
