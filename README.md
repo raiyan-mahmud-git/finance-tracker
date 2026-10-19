@@ -1,101 +1,76 @@
-#Flo — Personal Finance Tracker
+# Flo — Personal Finance Tracker
 
-Flo is a lightweight, modern personal finance tracking web app designed to help users manage income, expenses, and budgets with clarity and simplicity. It runs entirely in the browser with no backend required.
+"Flo" is a modern, privacy-first personal finance tracker that runs **100% in your browser** with vanilla HTML, CSS, and modern JavaScript ES modules.
 
-# Features
+- 🔒 **Zero Backend & No Tracking**: All data is stored privately on your machine using `localStorage`. No accounts, no subscriptions, no paid APIs.
+- ⚡ **Zero Build Step**: Native browser ES modules — no bundlers (Webpack, Vite, Rollup) required for running the application.
+- 📱 **Progressive Web App (PWA)**: Installable on Desktop, iOS, and Android with complete offline functionality via Service Workers.
 
--Core Functionality
-•Track income and expenses with categories
-•Real-time balance calculation
-•Monthly financial overview with visual charts
-•Transaction history with search and filters
-•Category-based expense breakdown
-•Budget Management
-•Create monthly budgets per category
-Visual progress indicators
-•Spending alerts based on usage percentage
+---
 
-# User Experience
+## 🚀 Getting Started Locally
 
--Clean, modern UI with responsive design
--Dark mode support
--Smooth navigation with sidebar views
--Onboarding screen for first-time users
+> **Important Note on ES Modules:**  
+> Modern browsers block JavaScript ES modules (`import`/`export`) when opened directly via file double-click (`file://`) due to standard CORS security policies.  
+> You must run a lightweight local static server:
 
-# Data Handling
+### Option A: VS Code Live Server
+1. Open the folder in VS Code.
+2. Click **Go Live** on the bottom status bar (or right-click `index.html` → *Open with Live Server*).
 
--Local storage persistence (no account required)
--Export data as JSON
--Import previously saved data
--Full data reset option
+### Option B: Python (Built-in)
+```bash
+# Python 3
+python -m http.server 3000
+# Then visit http://localhost:3000
+```
 
-# Customization
-Multiple currency options (USD, EUR, BDT, etc.)
-Calendar-based month navigation
-Tech Stack
-HTML5
-CSS3 (custom properties, responsive layout)
-Vanilla JavaScript (no frameworks)
-LocalStorage API for persistence
+### Option C: Node.js
+```bash
+npm start
+# Launches local static server at http://localhost:3000
+```
 
-# Project Structure
+---
 
-index.html   # Entire application (UI + logic)
-This is a single-file application where:
-UI layout is written in HTML
-Styling is handled with embedded CSS
-Logic and state management are implemented in JavaScript
+## 🛠️ Development & Quality Commands
 
-# How It Works
-All data (transactions, budgets, settings) is stored locally in the browser.
-The app dynamically updates UI components based on state changes.
-No internet connection or backend is required after loading.
+```bash
+# Install test tools (Vitest, Playwright, ESLint)
+npm install
 
-# Example state structure:
-JSON
-{
-  "transactions": [],
-  "budgets": [],
-  "currency": "$"
-}
+# Run Vitest unit tests
+npm test
 
-# Getting Started
+# Run ESLint check
+npm run lint
 
-Download or clone the project
-Open index.html in any modern browser
-Start adding transactions using the + button
-No installation or setup required.
+# Run Playwright end-to-end tests
+npm run test:e2e
+```
 
-# Key Components
-Dashboard
-Displays current balance, income, expenses
-Monthly bar chart visualization
-Top spending categories
-Transactions
-Full transaction list
-Search and filter system
-Income/expense classification
-Budgets
-Set limits per category
-Track usage with progress bars
+---
 
-•Settings
--Currency selection
--Dark mode toggle
--Data import/export
+## 🌟 Key Features & Improvements
 
-# Limitations
-No cloud sync (data is device-specific)
-No authentication system
-Not suitable for multi-user environments
-Data can be lost if browser storage is cleared
+### 1. Fixes for Real Financial Application Bugs
+- **XSS Prevention**: User transaction descriptions and categories are sanitized and escaped.
+- **Dynamic Chart Labels**: 6-month bar chart dynamically generates month labels anchored to the viewed month, safely handling year transitions.
+- **True Cumulative Balance**: Displays your true lifetime balance in the hero card, with current month net presented separately.
+- **Safe Month Math**: Prevents 29th–31st overflow bugs (e.g. Jan 31 + 1 month safely becomes Feb) by modeling dates as `{ year, month }`.
+- **Timezone Safety**: Dates use local time formatting (`YYYY-MM-DD`) instead of `toISOString().split('T')[0]` which causes post-midnight bugs in positive UTC zones (e.g., UTC+6).
+- **Exact Money Math**: All amounts stored internally as integer minor units (e.g. cents/poisha) and formatted via `Intl.NumberFormat`, completely eliminating float rounding drift.
+- **UI State Hygiene**: Filters, searches, and calendar selections are kept in transient memory, preserving clean state across reloads.
+- **Safe Imports**: Strict payload validation with live preview and choices for **Merge** or **Replace**.
+- **Accessible Month/Day Picker**: Clickable calendar grid allowing navigation to any month and day.
+- **Valid Viewport**: Removed invalid contradictory viewport scales for optimal mobile zooming accessibility.
 
-# Future Improvements
-Cloud sync / account system
-Recurring transactions
-Advanced analytics and reports
-Mobile app version (React Native / Flutter)
-Multi-currency conversion
-
-# License
-This project is open for personal and educational use.
+### 2. Core Functional Upgrades
+- **Full CRUD with Undo Toast**: Add, edit, and delete transactions and budgets with an interactive 4-second Undo toast.
+- **Custom Categories**: Create categories with custom names, emojis, and colors; old transactions are safely reassigned upon deletion.
+- **Recurring Transactions**: Set up monthly or weekly subscriptions and salaries with automatic generation and pause/resume.
+- **Rich SVG Charts**: 6-month bar chart, spending donut breakdown, and balance timeline area chart — 100% lightweight inline SVG with tooltips and keyboard navigation.
+- **Monthly Insights**: Average daily spend, projected month-end spend, and biggest spending shifts vs. the previous month.
+- **Excel-Ready CSV**: CSV export prepends a UTF-8 Byte Order Mark (BOM) ensuring Bangladeshi Taka (`৳`), Euro (`€`), and Pound (`£`) render properly in Excel.
+- **Dark Mode**: Automatically respects OS preference or lets users manually lock Light/Dark.
+- **Demo Data with Undo**: Populate realistic transactions, budgets, goals, and subscriptions with one click and instant undo.

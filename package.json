@@ -1,0 +1,19 @@
+{
+  "name": "finance-tracker",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Flo - Personal finance tracker built with vanilla HTML/CSS/JS",
+  "type": "module",
+  "scripts": {
+    "start": "npx serve . -l 3000",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "lint": "eslint . --ext .js"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "eslint": "^8.56.0",
+    "vitest": "^1.2.0"
+  }
+}
