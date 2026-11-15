@@ -36,11 +36,6 @@ export function renderMobileBottomBar(state: AppState): string {
           <span class="tab-icon">🌱</span>
           <span class="tab-label">Goals</span>
         </button>
-
-        <button type="button" class="mobile-tab-btn ${activeView === 'settings' ? 'active' : ''}" onclick="window.floApp.switchView('settings')" aria-label="Settings">
-          <span class="tab-icon">⚙️</span>
-          <span class="tab-label">Settings</span>
-        </button>
       </div>
     </nav>
   `;

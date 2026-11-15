@@ -15,13 +15,17 @@ export function renderNavbar(state: AppState): string {
   return `
     <header class="dashboard-header" role="banner" style="display:flex; align-items:center; justify-content:space-between; padding:18px 0; border-bottom:1px solid var(--border-soft); margin-bottom:24px;">
       <!-- Brand Logo -->
-      <div style="display:flex; align-items:center; gap:28px;">
+      <div class="header-brand-row" style="display:flex; align-items:center; gap:28px;">
         <a href="#dashboard" onclick="event.preventDefault(); window.floApp.switchView('dashboard')" style="display:flex; align-items:center; gap:10px; text-decoration:none; color:inherit;" aria-label="Flo Home">
           <div style="width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg, var(--indigo), #10B981); display:flex; align-items:center; justify-content:center; color:white; font-weight:800; font-size:18px; box-shadow:var(--shadow-sm);">
             F
           </div>
           <span style="font-size:22px; font-weight:800; letter-spacing:-0.5px; color:var(--text-primary);">Flo</span>
         </a>
+
+        <button type="button" class="mobile-settings-shortcut btn btn-sm ${activeView === 'settings' ? 'active' : ''}" onclick="window.floApp.switchView('settings')" aria-label="Settings" title="Settings">
+          ⚙️
+        </button>
 
         <!-- Desktop Navigation Tabs -->
         <nav class="desktop-nav" aria-label="Primary navigation">
