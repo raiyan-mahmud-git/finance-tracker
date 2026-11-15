@@ -432,10 +432,12 @@ class Store {
     };
     this.notify();
 
-    this.toastTimer = setTimeout(() => {
-      this.state.ui.toast = null;
-      this.notify();
-    }, duration);
+    if (!undoAction) {
+      this.toastTimer = setTimeout(() => {
+        this.state.ui.toast = null;
+        this.notify();
+      }, duration);
+    }
   }
 
   public dismissToast() {

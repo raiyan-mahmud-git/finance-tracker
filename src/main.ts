@@ -119,6 +119,7 @@ function renderApp(state: AppState) {
           <button type="button" class="btn btn-sm" style="background:var(--indigo); color:white; padding:4px 10px; font-weight:700; border-radius:12px;" onclick="window.floApp.executeToastUndo()">
             UNDO
           </button>
+          <button type="button" class="toast-dismiss" onclick="window.floApp.dismissToast()" aria-label="Dismiss notification">×</button>
         ` : ''}
       </div>
     </div>
@@ -707,6 +708,7 @@ function updateCategoryDropdowns() {
       store.showToast('Action undone');
     }
   },
+  dismissToast: () => store.dismissToast(),
 
   promptInstall: async () => {
     if (!deferredInstallPrompt) return;

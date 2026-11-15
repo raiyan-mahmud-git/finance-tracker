@@ -561,7 +561,7 @@ dialog.native-modal::backdrop {
   bottom: 24px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 100;
+  z-index: 1100;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -581,6 +581,24 @@ dialog.native-modal::backdrop {
   align-items: center;
   gap: 14px;
   animation: toastIn 0.2s ease-out;
+}
+
+.toast-dismiss {
+  color: inherit;
+  font-size: 18px;
+  line-height: 1;
+  padding: 2px 4px;
+  opacity: 0.75;
+}
+
+.toast-dismiss:hover {
+  opacity: 1;
+}
+
+@media (max-width: 767px) {
+  .toast-container {
+    bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+  }
 }
 
 @keyframes toastIn {
