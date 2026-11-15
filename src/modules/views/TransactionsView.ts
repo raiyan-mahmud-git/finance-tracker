@@ -82,8 +82,8 @@ export function renderTransactionsView(state: AppState): string {
   return `
     <div class="transactions-view animate-fade-in" style="display:flex; flex-direction:column; gap:20px;">
       <!-- Search & Filters Toolbar -->
-      <div class="card" style="padding:16px 20px;">
-        <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between; margin-bottom:14px;">
+      <div class="card transaction-filters" style="padding:16px 20px;">
+        <div class="transaction-toolbar" style="display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between; margin-bottom:14px;">
           <!-- Search input -->
           <div style="position:relative; flex:1; min-width:240px;">
             <span style="position:absolute; left:12px; top:11px; font-size:14px; color:var(--text-muted);">🔍</span>
@@ -169,7 +169,7 @@ export function renderTransactionsView(state: AppState): string {
 
               return `
                 <div class="txn-row" style="display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid var(--border-soft);" tabindex="0">
-                  <div style="display:flex; align-items:center; gap:14px; min-width:0; flex:1;">
+                  <div class="txn-row-main" style="display:flex; align-items:center; gap:14px; min-width:0; flex:1;">
                     <span style="width:40px; height:40px; border-radius:12px; background:${cat.color}20; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0;">
                       ${cat.emoji}
                     </span>
@@ -178,7 +178,7 @@ export function renderTransactionsView(state: AppState): string {
                       <div style="font-weight:600; font-size:14px; color:var(--text-primary); text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">
                         ${escapeHtml(t.description || (isIncome ? 'Income' : 'Expense'))}
                       </div>
-                      <div style="font-size:12px; color:var(--text-muted); margin-top:2px; display:flex; align-items:center; gap:8px;">
+                      <div class="txn-row-meta" style="font-size:12px; color:var(--text-muted); margin-top:2px; display:flex; align-items:center; gap:8px;">
                         <span>${escapeHtml(cat.name)}</span>
                         <span>•</span>
                         <span>${t.date}</span>
@@ -188,12 +188,12 @@ export function renderTransactionsView(state: AppState): string {
                   </div>
 
                   <!-- Amount & Edit/Delete Action Buttons -->
-                  <div style="display:flex; align-items:center; gap:16px; margin-left:12px;">
+                  <div class="txn-row-trailing" style="display:flex; align-items:center; gap:16px; margin-left:12px;">
                     <div style="font-weight:700; font-size:16px; color:${isIncome ? 'var(--income)' : 'var(--expense)'}; white-space:nowrap; display:inline-flex; align-items:baseline;" class="money-value">
                       ${isIncome ? '+' : '-'}${formatMoney(t.amount, currency)}
                     </div>
 
-                    <div style="display:flex; gap:4px;">
+                    <div class="txn-row-actions" style="display:flex; gap:4px;">
                       <button class="btn btn-sm" onclick="window.floApp.openEditTransactionModal('${t.id}')" aria-label="Edit transaction ${escapeHtml(t.description)}" title="Edit">
                         ✏️
                       </button>

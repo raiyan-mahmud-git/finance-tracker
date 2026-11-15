@@ -508,6 +508,24 @@ dialog.native-modal::backdrop {
 }
 
 @media (max-width: 767px) {
+  .app-layout > *,
+  .card,
+  input,
+  select,
+  textarea,
+  canvas,
+  svg,
+  img {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .dashboard-view [style*="minmax(340px"],
+  .budgets-view [style*="minmax(320px"],
+  .goals-view [style*="minmax(320px"] {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
   body {
     min-height: 100vh;
     min-height: 100dvh;
@@ -527,6 +545,175 @@ dialog.native-modal::backdrop {
     gap: 10px;
     flex-wrap: wrap;
   }
+
+  .dashboard-header > div:first-child {
+    width: 100%;
+  }
+
+  .header-controls {
+    width: 100%;
+    display: grid !important;
+    grid-template-columns: minmax(82px, 0.8fr) minmax(0, 1.5fr) 40px 62px;
+    gap: 8px !important;
+  }
+
+  .header-controls > #month-picker-container,
+  .header-controls > .add-txn-btn,
+  .header-controls > button,
+  .header-controls > #pwa-install-container {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .header-controls .month-badge {
+    justify-content: space-between;
+    gap: 3px;
+    padding: 6px 5px;
+  }
+
+  .header-controls #current-month-label {
+    font-size: 12px !important;
+    text-align: center;
+  }
+
+  .header-controls .month-nav-btn {
+    padding: 3px 2px;
+  }
+
+  .header-controls .add-txn-btn {
+    justify-content: center;
+    gap: 5px;
+    padding: 8px 5px;
+    font-size: 12px;
+    white-space: normal;
+    line-height: 1.2;
+  }
+
+  .header-controls .kbd-shortcut {
+    display: none;
+  }
+
+  #pwa-install-container > button {
+    width: 100%;
+    min-height: 38px;
+    padding: 5px 3px !important;
+    font-size: 11px !important;
+    line-height: 1.15;
+  }
+
+  .card {
+    padding: 18px;
+  }
+
+  .transaction-filters {
+    padding: 14px !important;
+  }
+
+  .transaction-toolbar {
+    align-items: stretch !important;
+  }
+
+  .transaction-toolbar > div:first-child {
+    flex-basis: 100%;
+    min-width: 0 !important;
+  }
+
+  .transaction-toolbar > div:last-child {
+    width: 100%;
+  }
+
+  .transaction-toolbar select {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .txn-row {
+    display: grid !important;
+    grid-template-columns: 40px minmax(0, 1fr);
+    align-items: center !important;
+    column-gap: 12px;
+    row-gap: 12px;
+    padding: 14px !important;
+  }
+
+  .txn-row-main {
+    display: contents !important;
+  }
+
+  .txn-row-main > span:first-child {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .txn-row-main > div {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .txn-row-meta {
+    flex-wrap: wrap;
+    row-gap: 2px !important;
+  }
+
+  .txn-row-meta > span:nth-child(3) {
+    white-space: nowrap;
+  }
+
+  .txn-row-trailing {
+    grid-column: 2;
+    width: 100%;
+    justify-content: space-between;
+    gap: 8px !important;
+    margin-left: 0 !important;
+  }
+
+  .txn-row-trailing .money-value {
+    min-width: 0;
+    font-size: clamp(14px, 4vw, 16px) !important;
+  }
+
+  .txn-row-actions {
+    flex-shrink: 0;
+  }
+
+  .settings-row {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    align-items: stretch !important;
+  }
+
+  .settings-row > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .settings-row select,
+  .settings-row > button {
+    width: 100%;
+    max-width: 100%;
+    justify-content: space-between;
+    text-align: left;
+    white-space: normal;
+  }
+
+  .sample-data-content {
+    align-items: stretch !important;
+  }
+
+  .sample-data-description,
+  .sample-data-actions {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .sample-data-actions > button {
+    flex: 1;
+    min-width: 0;
+    padding-inline: 8px;
+    white-space: normal;
+  }
+
   .mobile-tab-bar {
     display: flex !important;
     position: fixed;
@@ -552,6 +739,30 @@ dialog.native-modal::backdrop {
   .mobile-tab-fab {
     min-width: 48px;
     min-height: 48px;
+  }
+}
+
+@media (max-width: 380px) {
+  .app-layout {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .header-controls {
+    grid-template-columns: minmax(72px, 0.75fr) minmax(0, 1.4fr) 36px 54px;
+    gap: 6px !important;
+  }
+
+  .header-controls .add-txn-btn {
+    font-size: 11px;
+  }
+
+  #pwa-install-container > button {
+    font-size: 10px !important;
+  }
+
+  .mobile-tab-btn {
+    font-size: 9px;
   }
 }
 

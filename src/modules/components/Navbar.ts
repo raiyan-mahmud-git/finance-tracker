@@ -44,7 +44,7 @@ export function renderNavbar(state: AppState): string {
       </div>
 
       <!-- Controls Right: Month Picker, Clean New Transaction Button, Theme Toggle -->
-      <div style="display:flex; align-items:center; gap:10px;">
+      <div class="header-controls" style="display:flex; align-items:center; gap:10px;">
         <!-- Month Picker Dropdown Anchor -->
         <div style="position:relative;" id="month-picker-container">
           <div class="month-badge" onclick="window.floApp.toggleCalendar(event)" role="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Select month or date. Current: ${monthLabel}">

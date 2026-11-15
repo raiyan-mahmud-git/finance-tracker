@@ -78,9 +78,9 @@ export function renderSettingsView(state: AppState): string {
       </div>
 
       <!-- Sample Dataset Helper Card -->
-      <div class="card" style="background:var(--bg-elevated); border:1px solid var(--border-medium);">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
-          <div>
+      <div class="card sample-data-card" style="background:var(--bg-elevated); border:1px solid var(--border-medium);">
+        <div class="sample-data-content" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+          <div class="sample-data-description">
             <h3 style="font-size:16px; font-weight:700; color:var(--text-primary);">
               Sample Dataset
             </h3>
@@ -88,7 +88,7 @@ export function renderSettingsView(state: AppState): string {
               Loads realistic starter data with transactions, budgets, and goals to explore the features.
             </p>
           </div>
-          <div style="display:flex; gap:8px;">
+          <div class="sample-data-actions" style="display:flex; gap:8px;">
             <button type="button" class="btn btn-primary" onclick="window.floApp.loadSampleData()">
               Load Sample Data
             </button>
