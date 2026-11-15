@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4F46E5" />
+      <stop offset="100%" stop-color="#3D3AFF" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1FAB6E" />
+      <stop offset="100%" stop-color="#4EEDAB" />
+    </linearGradient>
+  </defs>
+  <!-- Background squircle with 12% safe padding -->
+  <rect width="512" height="512" rx="128" fill="url(#bg)" />
+  <!-- Growth trend bar / arrow accent -->
+  <path d="M 120 380 L 190 280 L 270 330 L 380 180" fill="none" stroke="url(#accent)" stroke-width="28" stroke-linecap="round" stroke-linejoin="round" opacity="0.3" />
+  <!-- Prominent Flo "F" glyph -->
+  <path d="M 170 140 H 340 M 170 140 V 372 M 170 248 H 300" stroke="#FFFFFF" stroke-width="44" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+  <!-- Small dot spark -->
+  <circle cx="380" cy="180" r="20" fill="url(#accent)" />
+</svg>

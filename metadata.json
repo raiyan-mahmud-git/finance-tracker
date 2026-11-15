@@ -1,0 +1,8 @@
+{
+  "name": "Flo — Personal Finance Tracker",
+  "description": "A polished, offline-first personal finance tracker with zero tracking, custom budgets, recurring transactions, and interactive analytics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

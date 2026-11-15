@@ -1,267 +1,33 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" data-theme="light">
-<head>
-  <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Flo — Personal Finance Tracker</title>
+    <meta name="description" content="A polished, offline-first personal finance tracker with zero tracking, custom budgets, recurring transactions, and interactive analytics." />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Flo — Personal Finance Tracker</title>
-  <meta name="description" content="A clean, private, offline-first personal finance tracker with zero paid dependencies.">
-  <meta name="theme-color" content="#3D3AFF">
+    <!-- Open Graph & Social -->
+    <meta property="og:title" content="Flo — Personal Finance Tracker" />
+    <meta property="og:description" content="A polished, offline-first personal finance tracker with zero tracking, custom budgets, recurring transactions, and interactive analytics." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
 
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" type="image/png" href="flo-logo.png">
-  <link rel="apple-touch-icon" href="flo-logo.png">
+    <!-- PWA & Mobile Web Standards -->
+    <meta name="theme-color" content="#3D3AFF" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Flo" />
+    <link rel="apple-touch-icon" href="%BASE_URL%apple-touch-icon.png" />
+    <link rel="icon" type="image/svg+xml" href="%BASE_URL%icon.svg" />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Space+Grotesk:wght@500;700&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-
-  <nav class="bottom-tab-bar" aria-label="Mobile Navigation">
-    <button class="tab-btn active" data-view="dashboard" aria-label="Dashboard">
-      <span aria-hidden="true">📊</span>
-      <span>Home</span>
-    </button>
-    <button class="tab-btn" data-view="transactions" aria-label="Transactions">
-      <span aria-hidden="true">📋</span>
-      <span>Txns</span>
-    </button>
-    <button class="tab-btn" data-view="budgets" aria-label="Budgets">
-      <span aria-hidden="true">🎯</span>
-      <span>Budgets</span>
-    </button>
-    <button class="tab-btn" data-view="goals" aria-label="Savings Goals">
-      <span aria-hidden="true">💎</span>
-      <span>Goals</span>
-    </button>
-    <button class="tab-btn" data-view="settings" aria-label="Settings">
-      <span aria-hidden="true">⚙️</span>
-      <span>Settings</span>
-    </button>
-  </nav>
-
-  <div class="sidebar-overlay" id="sidebarOverlay"></div>
-  <aside class="sidebar" id="sidebar" aria-label="Main Navigation">
-    <a class="sidebar-logo" href="#" aria-label="Flo Home">
-      <img src="flo-logo.png" alt="Flo Logo" class="logo-img" id="logoImg" onerror="this.style.display='none'; document.getElementById('logoFallback').style.display='flex';">
-      <div class="logo-fallback" id="logoFallback" style="display: none;">F</div>
-      <span class="logo-text">Flo</span>
-    </a>
-
-    <button class="nav-item active" data-view="dashboard">
-      <span aria-hidden="true">📊</span> <span>Dashboard</span>
-    </button>
-    <button class="nav-item" data-view="transactions">
-      <span aria-hidden="true">📋</span> <span>Transactions</span>
-    </button>
-    <button class="nav-item" data-view="budgets">
-      <span aria-hidden="true">🎯</span> <span>Budgets</span>
-    </button>
-    <button class="nav-item" data-view="goals">
-      <span aria-hidden="true">💎</span> <span>Savings Goals</span>
-    </button>
-    <button class="nav-item" data-view="recurring">
-      <span aria-hidden="true">🔄</span> <span>Recurring</span>
-    </button>
-    <button class="nav-item" data-view="categories">
-      <span aria-hidden="true">🏷️</span> <span>Categories</span>
-    </button>
-    <button class="nav-item" data-view="settings">
-      <span aria-hidden="true">⚙️</span> <span>Settings</span>
-    </button>
-
-    <div class="sidebar-bottom">
-      <button class="nav-item" onclick="window.floApp.toggleTheme()" aria-label="Toggle Dark Mode">
-        <span aria-hidden="true">🌙</span>
-        <span>Dark Mode</span>
-        <div style="margin-left: auto;">
-          <div class="theme-toggle-switch"></div>
-        </div>
-      </button>
-    </div>
-  </aside>
-
-  <main class="app" id="mainContent">
-
-    <header class="dashboard-header">
-      <div style="display:flex; align-items:center;">
-        <button class="hamburger" id="hamburgerBtn" aria-label="Open Navigation Sidebar">☰</button>
-        <h1 id="pageTitle">Dashboard</h1>
-      </div>
-
-      <div style="position: relative;">
-        <div class="month-badge" id="monthBadge" role="region" aria-label="Month selector">
-          <button id="prevMonthBtn" aria-label="Previous Month">◀</button>
-          <span id="currentMonthLabel">Apr 2026</span>
-          <button id="nextMonthBtn" aria-label="Next Month">▶</button>
-        </div>
-        <div id="calendarDropdown" class="calendar-dropdown" style="display: none;" role="dialog" aria-label="Calendar view"></div>
-      </div>
-    </header>
-
-    <section class="view active" id="view-dashboard" aria-label="Dashboard View"></section>
-    <section class="view" id="view-transactions" aria-label="Transactions View"></section>
-    <section class="view" id="view-budgets" aria-label="Budgets View"></section>
-    <section class="view" id="view-goals" aria-label="Savings Goals View"></section>
-    <section class="view" id="view-recurring" aria-label="Recurring View"></section>
-    <section class="view" id="view-categories" aria-label="Categories View"></section>
-    <section class="view" id="view-settings" aria-label="Settings View"></section>
-  </main>
-
-  <button class="fab" id="fabBtn" aria-label="Add new transaction (Shortcut: N)">
-    <span aria-hidden="true" style="font-size:22px; line-height:1;">+</span>
-    <span>Add</span>
-  </button>
-
-  <aside class="toast-container" id="toastContainer" role="status" aria-live="polite">
-    <span id="toastMessage">Action completed</span>
-    <button class="toast-undo-btn" id="toastUndoBtn">Undo</button>
-  </aside>
-
-  <div class="modal-backdrop" id="txnModal" role="dialog" aria-modal="true" aria-labelledby="txnModalTitle">
-    <div class="modal">
-      <div class="modal-header">
-        <h2 class="modal-title" id="txnModalTitle">Add Transaction</h2>
-        <button class="modal-close" aria-label="Close modal">✕</button>
-      </div>
-      <form id="txnForm">
-        <input type="hidden" id="txnId">
-        <div class="type-toggle" role="radiogroup" aria-label="Transaction Type">
-          <button type="button" id="typeExpense" class="type-btn active-expense">💸 Expense</button>
-          <button type="button" id="typeIncome" class="type-btn">💰 Income</button>
-        </div>
-
-        <div style="position:relative;">
-          <span style="position:absolute; left:14px; top:13px; font-size:16px; color:var(--text-muted);" id="txnCurrencyPrefix">$</span>
-          <input id="txnAmount" type="number" step="any" placeholder="0.00" style="padding-left:34px;" class="input" required aria-label="Amount">
-        </div>
-
-        <input id="txnDesc" placeholder="Description (e.g. Groceries, Dinner)" class="input" required aria-label="Description">
-        <select id="txnCategory" class="input" aria-label="Category"></select>
-        <input id="txnDate" type="date" class="input" required aria-label="Date">
-
-        <button type="submit" class="btn btn-primary" style="width:100%; padding:14px; font-size:15px;">Save Transaction</button>
-      </form>
-    </div>
-  </div>
-
-  <div class="modal-backdrop" id="budgetModal" role="dialog" aria-modal="true" aria-labelledby="budgetModalTitle">
-    <div class="modal">
-      <div class="modal-header">
-        <h2 class="modal-title" id="budgetModalTitle">New Budget</h2>
-        <button class="modal-close" aria-label="Close modal">✕</button>
-      </div>
-      <form id="budgetForm">
-        <select id="budgetCategory" class="input" aria-label="Select Budget Category"></select>
-        <div style="position:relative;">
-          <span style="position:absolute; left:14px; top:13px; font-size:16px; color:var(--text-muted);" id="budgetCurrencyPrefix">$</span>
-          <input id="budgetLimit" type="number" step="any" placeholder="Monthly limit" style="padding-left:34px;" class="input" required aria-label="Monthly Limit">
-        </div>
-        <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
-          <input type="checkbox" id="budgetRollover" style="width:18px; height:18px; accent-color:var(--indigo);">
-          <label for="budgetRollover" style="font-size:13px; color:var(--text-secondary); cursor:pointer;">
-            Enable Rollover (unspent funds roll into next month)
-          </label>
-        </div>
-        <button type="submit" class="btn btn-primary" style="width:100%; padding:14px; font-size:15px;">Save Budget</button>
-      </form>
-    </div>
-  </div>
-
-  <div class="modal-backdrop" id="goalModal" role="dialog" aria-modal="true" aria-labelledby="goalModalTitle">
-    <div class="modal">
-      <div class="modal-header">
-        <h2 class="modal-title" id="goalModalTitle">Savings Goal</h2>
-        <button class="modal-close" aria-label="Close modal">✕</button>
-      </div>
-      <form id="goalForm">
-        <input id="goalName" placeholder="Goal name (e.g. New Laptop, Vacation)" class="input" required>
-        <div style="position:relative;">
-          <span style="position:absolute; left:14px; top:13px; font-size:16px; color:var(--text-muted);" id="goalCurrencyPrefix">$</span>
-          <input id="goalTarget" type="number" step="any" placeholder="Target amount" style="padding-left:34px;" class="input" required>
-        </div>
-        <input id="goalCurrent" type="number" step="any" placeholder="Currently saved (optional)" class="input">
-        <input id="goalDate" type="date" class="input" placeholder="Target date (optional)">
-        <select id="goalEmoji" class="input">
-          <option value="🎯">🎯 Target</option>
-          <option value="💻">💻 Tech / Gadget</option>
-          <option value="🏖️">🏖️ Vacation</option>
-          <option value="🛡️">🛡️ Emergency Fund</option>
-          <option value="🚗">🚗 Vehicle</option>
-          <option value="🏠">🏠 House</option>
-        </select>
-        <button type="submit" class="btn btn-primary" style="width:100%; padding:14px;">Save Goal</button>
-      </form>
-    </div>
-  </div>
-
-  <div class="modal-backdrop" id="recurringModal" role="dialog" aria-modal="true" aria-labelledby="recModalTitle">
-    <div class="modal">
-      <div class="modal-header">
-        <h2 class="modal-title" id="recModalTitle">Recurring Transaction</h2>
-        <button class="modal-close" aria-label="Close modal">✕</button>
-      </div>
-      <form id="recurringForm">
-        <input id="recDesc" placeholder="Description (e.g. Rent, Netflix)" class="input" required>
-        <div style="position:relative;">
-          <span style="position:absolute; left:14px; top:13px; font-size:16px; color:var(--text-muted);" id="recCurrencyPrefix">$</span>
-          <input id="recAmount" type="number" step="any" placeholder="Amount" style="padding-left:34px;" class="input" required>
-        </div>
-        <select id="recType" class="input">
-          <option value="expense">💸 Expense</option>
-          <option value="income">💰 Income</option>
-        </select>
-        <select id="recCategory" class="input"></select>
-        <select id="recFrequency" class="input">
-          <option value="monthly">Monthly</option>
-          <option value="weekly">Weekly</option>
-        </select>
-        <input id="recStartDate" type="date" class="input" required>
-        <button type="submit" class="btn btn-primary" style="width:100%; padding:14px;">Create Recurring Rule</button>
-      </form>
-    </div>
-  </div>
-
-  <div class="modal-backdrop" id="categoryModal" role="dialog" aria-modal="true" aria-labelledby="catModalTitle">
-    <div class="modal">
-      <div class="modal-header">
-        <h2 class="modal-title" id="catModalTitle">Category</h2>
-        <button class="modal-close" aria-label="Close modal">✕</button>
-      </div>
-      <form id="categoryForm">
-        <input type="hidden" id="catEditId">
-        <input id="catName" placeholder="Category Name" class="input" required>
-        <input id="catEmoji" placeholder="Emoji (e.g. 🍕, 🚀, 💡)" class="input" required>
-        <div style="margin-bottom:16px;">
-          <label style="font-size:12px; color:var(--text-muted); display:block; margin-bottom:6px;">Badge Color</label>
-          <input id="catColor" type="color" value="#3D3AFF" style="width:100%; height:44px; border-radius:12px; border:1px solid var(--border-medium); cursor:pointer;">
-        </div>
-        <div style="display:flex; align-items:center; gap:8px; margin-bottom:20px;">
-          <input type="checkbox" id="catIsIncome" style="width:18px; height:18px; accent-color:var(--income);">
-          <label for="catIsIncome" style="font-size:13px; color:var(--text-secondary); cursor:pointer;">This is an Income category</label>
-        </div>
-        <button type="submit" class="btn btn-primary" style="width:100%; padding:14px;">Save Category</button>
-      </form>
-    </div>
-  </div>
-
-  <div class="modal-backdrop" id="importModal" role="dialog" aria-modal="true" aria-labelledby="importModalTitle">
-    <div class="modal">
-      <div class="modal-header">
-        <h2 class="modal-title" id="importModalTitle">Import Preview</h2>
-        <button class="modal-close" aria-label="Close modal">✕</button>
-      </div>
-      <p id="importPreviewText" style="color:var(--text-secondary); line-height:1.6; margin-bottom:24px; font-size:14px;"></p>
-      <div style="display:flex; gap:12px;">
-        <button type="button" class="btn btn-primary" id="importMergeBtn" style="flex:1;">Merge with Existing</button>
-        <button type="button" class="btn btn-danger" id="importReplaceBtn" style="flex:1;">Replace Everything</button>
-      </div>
-    </div>
-  </div>
-
-  <script type="module" src="js/main.js"></script>
-</body>
+    <!-- Typography: DM Sans + Noto Sans Bengali for universal currency symbol support -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Noto+Sans+Bengali:wght@400;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
 </html>
