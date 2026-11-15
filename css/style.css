@@ -579,12 +579,14 @@ body {
 @media (max-width: 768px) {
   .bottom-tab-bar {
     display: flex;
+    height: calc(64px + env(safe-area-inset-bottom, 0px));
+    padding: 0 8px env(safe-area-inset-bottom, 0px);
   }
   .hamburger {
     display: none;
   }
   .fab {
-    bottom: 76px; /* FAB will not overlap mobile bottom nav */
+    bottom: calc(76px + env(safe-area-inset-bottom, 0px)); /* Keep the add button above the mobile tab bar */
     right: 20px;
   }
   .app {
@@ -623,7 +625,10 @@ body {
   max-width: 480px;
   box-shadow: var(--shadow-lg);
   max-height: 90vh;
+  max-height: 90dvh;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   border: 1px solid var(--border-soft);
 }
 
