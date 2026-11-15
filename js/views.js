@@ -152,7 +152,7 @@ export function renderDashboardView(containerEl, state) {
   });
 
   containerEl.innerHTML = `
-    <!-- Cumulative balance card with net month pill -->
+
     <div class="card balance-large" tabindex="0" aria-label="Total Cumulative Balance: ${formatMoney(cumulativeBalance, currencyKey)}">
       <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px;">
         <div>
@@ -168,7 +168,6 @@ export function renderDashboardView(containerEl, state) {
       </div>
     </div>
 
-    <!-- Monthly income and expense cards -->
     <div class="monthly-cards">
       <div class="card monthly-card income" tabindex="0">
         <div class="label">Monthly income</div>
@@ -182,7 +181,6 @@ export function renderDashboardView(containerEl, state) {
       </div>
     </div>
 
-    <!-- Financial Insights Panel -->
     <div class="card" style="margin-bottom:28px;">
       <div class="section-title" style="display:flex; align-items:center; gap:8px;">
         <span>💡</span> Monthly Smart Insights
@@ -206,7 +204,7 @@ export function renderDashboardView(containerEl, state) {
           <div class="insight-item">
             <div class="label">Biggest Shift vs Last Month</div>
             <div class="value" style="font-size:14px;">
-              ${biggestCatObj.emoji} ${escapeHtml(biggestCatObj.name)}: 
+              ${biggestCatObj.emoji} ${escapeHtml(biggestCatObj.name)}:
               <span style="color:${biggestChangeDiff > 0 ? 'var(--expense)' : 'var(--income)'}">
                 ${biggestChangeDiff > 0 ? '+' : ''}${formatMoney(biggestChangeDiff, currencyKey)}
               </span>
@@ -216,7 +214,6 @@ export function renderDashboardView(containerEl, state) {
       </div>
     </div>
 
-    <!-- 6-Month Income vs Expense Bar Chart -->
     <div class="card" style="margin-bottom:28px;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
         <span style="font-weight:600; color:var(--text-primary);">6-Month Overview</span>
@@ -236,7 +233,6 @@ export function renderDashboardView(containerEl, state) {
       </div>
     </div>
 
-    <!-- Charts row: Donut & Balance Timeline -->
     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:20px; margin-bottom:28px;">
       <div class="card">
         <div class="section-title">Spending by Category</div>
@@ -248,7 +244,6 @@ export function renderDashboardView(containerEl, state) {
       </div>
     </div>
 
-    <!-- Top categories list -->
     <div class="card">
       <div class="section-title">Top Expense Categories</div>
       <div id="categoryRows">
@@ -329,7 +324,7 @@ export function renderTransactionsView(containerEl, state) {
   const pageItems = filtered.slice(startIndex, startIndex + pageSize);
 
   containerEl.innerHTML = `
-    <!-- Search & Filter Controls -->
+
     <div class="card" style="margin-bottom:20px; padding:18px;">
       <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
         <div style="position:relative; flex:1; min-width:200px;">
@@ -363,7 +358,6 @@ export function renderTransactionsView(containerEl, state) {
         </div>
       </div>
 
-      <!-- Date Range Sub-row -->
       <div style="display:flex; gap:12px; align-items:center; margin-top:12px; flex-wrap:wrap; font-size:13px;">
         <span style="color:var(--text-muted);">Date Range:</span>
         <input type="date" id="dateRangeStart" value="${escapeHtml(ui.dateRange.start)}" class="input btn-sm" style="width:auto; margin-bottom:0;" aria-label="Start Date" />
@@ -373,7 +367,6 @@ export function renderTransactionsView(containerEl, state) {
       </div>
     </div>
 
-    <!-- Transactions List -->
     <div class="card" style="padding:0; overflow:hidden;">
       ${!pageItems.length ? `
         <div class="empty-state">
@@ -391,7 +384,7 @@ export function renderTransactionsView(containerEl, state) {
                 <div class="txn-left">
                   <span class="txn-icon ${isIncome ? 'income' : 'expense'}" style="background:${cat.color}20">${cat.emoji}</span>
                   <div>
-                    <!-- Bug 1 fix: All user descriptions escaped -->
+
                     <div class="txn-name">${escapeHtml(t.description)}</div>
                     <div class="txn-meta">${escapeHtml(cat.name)} · ${formatDisplayDate(t.date)}</div>
                   </div>
@@ -400,7 +393,7 @@ export function renderTransactionsView(containerEl, state) {
                   <span class="txn-amount ${isIncome ? 'income' : 'expense'}">
                     ${isIncome ? '+' : '-'}${formatMoney(t.amount, currencyKey)}
                   </span>
-                  <!-- Phase 2: Edit & Delete buttons -->
+
                   <div class="txn-actions" style="display:flex; gap:6px;">
                     <button class="btn btn-sm btn-icon edit-txn-btn" data-id="${t.id}" title="Edit transaction" aria-label="Edit ${escapeHtml(t.description)}">✏️</button>
                     <button class="btn btn-sm btn-icon btn-danger delete-txn-btn" data-id="${t.id}" title="Delete transaction" aria-label="Delete ${escapeHtml(t.description)}">🗑️</button>
@@ -412,7 +405,6 @@ export function renderTransactionsView(containerEl, state) {
         </div>
       `}
 
-      <!-- Pagination Footer -->
       ${totalPages > 1 ? `
         <div style="display:flex; justify-content:space-between; align-items:center; padding:14px 20px; border-top:1px solid var(--border-soft); background:var(--bg-elevated);">
           <span style="font-size:13px; color:var(--text-muted);">
@@ -550,12 +542,10 @@ export function renderBudgetsView(containerEl, state) {
                 <span style="color:var(--text-muted); font-size:14px;">limit: ${formatMoney(limit, currencyKey)}</span>
               </div>
 
-              <!-- Budget Progress Bar -->
               <div style="height:10px; background:var(--border-soft); border-radius:6px; overflow:hidden; position:relative;">
                 <div style="width:${barWidth}%; height:100%; background:${barColor}; border-radius:6px; transition:width 0.3s;"></div>
               </div>
 
-              <!-- Warning / Over-budget Notice -->
               <div style="display:flex; justify-content:space-between; margin-top:12px; font-size:12px;">
                 <span style="font-weight:600; color:${isOverBudget ? 'var(--expense)' : isWarning ? 'var(--amber)' : 'var(--text-muted)'};">
                   ${isOverBudget ? `🚨 Over budget by ${pct}%!` : isWarning ? `⚠️ ${pct}% used (Warning)` : `${pct}% used`}
@@ -634,7 +624,6 @@ export function renderGoalsView(containerEl, state) {
                 <span style="color:var(--text-muted); font-size:13px;">of ${formatMoney(g.targetAmount, currencyKey)}</span>
               </div>
 
-              <!-- Progress bar -->
               <div style="height:10px; background:var(--border-soft); border-radius:6px; overflow:hidden; margin-bottom:12px;">
                 <div style="width:${pct}%; height:100%; background:var(--income); border-radius:6px; transition:width 0.3s;"></div>
               </div>
@@ -825,10 +814,9 @@ export function renderSettingsView(containerEl, state) {
       </div>
     </div>
 
-    <!-- Data Management (JSON & CSV Export/Import with UTF-8 BOM, Demo data, Clear) -->
     <div class="card" style="margin-top:20px;">
       <div class="section-title">Data Management</div>
-      
+
       <div class="settings-row">
         <div>
           <div class="settings-row-label">Export JSON</div>

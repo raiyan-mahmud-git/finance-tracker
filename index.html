@@ -2,28 +2,24 @@
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
- 
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Flo — Personal Finance Tracker</title>
   <meta name="description" content="A clean, private, offline-first personal finance tracker with zero paid dependencies.">
   <meta name="theme-color" content="#3D3AFF">
 
-  <!-- PWA Manifest & Favicon -->
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" href="flo-logo.png">
   <link rel="apple-touch-icon" href="flo-logo.png">
 
-  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Space+Grotesk:wght@500;700&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Main Modular Stylesheet -->
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-  <!-- Mobile Bottom Tab Bar -->
   <nav class="bottom-tab-bar" aria-label="Mobile Navigation">
     <button class="tab-btn active" data-view="dashboard" aria-label="Dashboard">
       <span aria-hidden="true">📊</span>
@@ -47,7 +43,6 @@
     </button>
   </nav>
 
-  <!-- Sidebar Overlay & Aside -->
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
   <aside class="sidebar" id="sidebar" aria-label="Main Navigation">
     <a class="sidebar-logo" href="#" aria-label="Flo Home">
@@ -89,16 +84,14 @@
     </div>
   </aside>
 
-  <!-- Main Content App Shell -->
   <main class="app" id="mainContent">
-    <!-- Header -->
+
     <header class="dashboard-header">
       <div style="display:flex; align-items:center;">
         <button class="hamburger" id="hamburgerBtn" aria-label="Open Navigation Sidebar">☰</button>
         <h1 id="pageTitle">Dashboard</h1>
       </div>
 
-      <!-- Month Navigation & Dropdown Calendar -->
       <div style="position: relative;">
         <div class="month-badge" id="monthBadge" role="region" aria-label="Month selector">
           <button id="prevMonthBtn" aria-label="Previous Month">◀</button>
@@ -109,7 +102,6 @@
       </div>
     </header>
 
-    <!-- Views Container -->
     <section class="view active" id="view-dashboard" aria-label="Dashboard View"></section>
     <section class="view" id="view-transactions" aria-label="Transactions View"></section>
     <section class="view" id="view-budgets" aria-label="Budgets View"></section>
@@ -119,21 +111,16 @@
     <section class="view" id="view-settings" aria-label="Settings View"></section>
   </main>
 
-  <!-- Add+ FAB Button -->
   <button class="fab" id="fabBtn" aria-label="Add new transaction (Shortcut: N)">
     <span aria-hidden="true" style="font-size:22px; line-height:1;">+</span>
     <span>Add</span>
   </button>
 
-  <!-- Floating Toast -->
   <aside class="toast-container" id="toastContainer" role="status" aria-live="polite">
     <span id="toastMessage">Action completed</span>
     <button class="toast-undo-btn" id="toastUndoBtn">Undo</button>
   </aside>
 
-  <!-- MODALS -->
-
-  <!-- Add / Edit Transaction Modal -->
   <div class="modal-backdrop" id="txnModal" role="dialog" aria-modal="true" aria-labelledby="txnModalTitle">
     <div class="modal">
       <div class="modal-header">
@@ -161,7 +148,6 @@
     </div>
   </div>
 
-  <!-- Budget Modal -->
   <div class="modal-backdrop" id="budgetModal" role="dialog" aria-modal="true" aria-labelledby="budgetModalTitle">
     <div class="modal">
       <div class="modal-header">
@@ -185,7 +171,6 @@
     </div>
   </div>
 
-  <!-- Goal Modal -->
   <div class="modal-backdrop" id="goalModal" role="dialog" aria-modal="true" aria-labelledby="goalModalTitle">
     <div class="modal">
       <div class="modal-header">
@@ -213,7 +198,6 @@
     </div>
   </div>
 
-  <!-- Recurring Modal -->
   <div class="modal-backdrop" id="recurringModal" role="dialog" aria-modal="true" aria-labelledby="recModalTitle">
     <div class="modal">
       <div class="modal-header">
@@ -241,7 +225,6 @@
     </div>
   </div>
 
-  <!-- Category Modal -->
   <div class="modal-backdrop" id="categoryModal" role="dialog" aria-modal="true" aria-labelledby="catModalTitle">
     <div class="modal">
       <div class="modal-header">
@@ -265,7 +248,6 @@
     </div>
   </div>
 
-  <!-- Import Preview Modal -->
   <div class="modal-backdrop" id="importModal" role="dialog" aria-modal="true" aria-labelledby="importModalTitle">
     <div class="modal">
       <div class="modal-header">
@@ -280,7 +262,6 @@
     </div>
   </div>
 
-  <!-- Vanilla ES Module Entry Script -->
   <script type="module" src="js/main.js"></script>
 </body>
 </html>

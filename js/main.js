@@ -128,7 +128,6 @@ class FloApp {
 
   // --- Global Event Bindings ---
   bindEvents() {
-    // Desktop sidebar and mobile bottom tabs share the same navigation behavior.
     document.querySelectorAll('.nav-item[data-view], .tab-btn[data-view]').forEach(item => {
       item.addEventListener('click', () => {
         const view = item.dataset.view;

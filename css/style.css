@@ -586,7 +586,7 @@ body {
     display: none;
   }
   .fab {
-    bottom: calc(76px + env(safe-area-inset-bottom, 0px)); /* Keep the add button above the mobile tab bar */
+    bottom: calc(76px + env(safe-area-inset-bottom, 0px));
     right: 20px;
   }
   .app {
