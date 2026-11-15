@@ -256,7 +256,7 @@ function updateCategoryDropdowns() {
   },
 
   resetToBlankData: () => {
-    if (confirm('Clear transactions, budgets, and goals to start fresh? You can undo this with the toast.')) {
+    if (confirm('Clear transactions, budgets, and goals to start fresh?')) {
       store.resetToBlank();
     }
   },

@@ -456,18 +456,13 @@ class Store {
   }
 
   public resetToBlank() {
-    const previousData = JSON.parse(JSON.stringify(this.state.data));
     this.state.data.transactions = [];
     this.state.data.budgets = [];
     this.state.data.recurringRules = [];
     this.state.data.savingsGoals = [];
     this.persist();
     this.notify();
-    this.showToast('Reset to blank', () => {
-      this.state.data = previousData;
-      this.persist();
-      this.notify();
-    });
+    this.showToast('Reset to blank');
   }
 
   public loadSampleData() {
