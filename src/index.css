@@ -736,9 +736,26 @@ dialog.native-modal::backdrop {
     padding: 6px 2px;
     justify-content: center;
   }
+
+  .mobile-tab-group {
+    display: flex;
+    min-width: 0;
+    flex: 0 0 calc(50% - 30px);
+  }
+
+  .mobile-tab-group .mobile-tab-btn {
+    min-width: 0;
+    flex: 1;
+  }
+
   .mobile-tab-fab {
+    position: absolute;
+    left: 50%;
+    top: calc(50% - 8px);
     min-width: 48px;
     min-height: 48px;
+    margin: 0;
+    transform: translate(-50%, -50%);
   }
 }
 
