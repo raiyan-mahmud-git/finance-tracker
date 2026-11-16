@@ -1,9 +1,3 @@
-/**
- * Accessible Modal Dialogs
- * Uses native HTML <dialog> elements with modal backdrop, focus trap, Escape key support,
- * and clean modern aesthetics for Add/Edit transaction, Budgets, and Import.
- */
-
 import { getTodayLocalDateString } from '../dates.ts';
 import { fromMinorUnits, toMinorUnits } from '../money.ts';
 import { store } from '../store.ts';
@@ -20,7 +14,7 @@ export function initModals() {
   if (!container) return;
 
   container.innerHTML = `
-    <!-- Redesigned Add/Edit Transaction Modal -->
+
     <dialog id="dlg-transaction" class="native-modal" aria-labelledby="dlg-txn-title">
       <div class="modal-content">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
@@ -41,7 +35,6 @@ export function initModals() {
           <input type="hidden" id="txn-edit-id" value="">
           <input type="hidden" id="txn-type" value="expense">
 
-          <!-- Modern Segmented Expense/Income Control -->
           <div class="type-segmented-control" role="tablist">
             <button type="button" id="btn-type-expense" class="type-segmented-btn active-expense" onclick="window.floApp.setTxnModalType('expense')" role="tab" aria-selected="true">
               <span>💸</span>
@@ -53,7 +46,6 @@ export function initModals() {
             </button>
           </div>
 
-          <!-- Prominent Amount Input -->
           <div style="margin-bottom:18px;">
             <label for="txn-amount" style="display:block; font-size:12px; font-weight:700; color:var(--text-secondary); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">
               Amount
@@ -76,7 +68,6 @@ export function initModals() {
             </div>
           </div>
 
-          <!-- Description Input with Quick Category Suggestions -->
           <div style="margin-bottom:18px;">
             <label for="txn-desc" style="display:block; font-size:12px; font-weight:700; color:var(--text-secondary); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">
               Description
@@ -91,7 +82,6 @@ export function initModals() {
               oninput="window.floApp.onTxnDescInput(this.value)"
             >
 
-            <!-- Quick template tags for one-click fill -->
             <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:6px;" id="quick-tag-suggestions">
               <button type="button" class="quick-cat-chip" onclick="window.floApp.fillQuickTxn('Groceries', 'groceries', 'expense')">🛒 Groceries</button>
               <button type="button" class="quick-cat-chip" onclick="window.floApp.fillQuickTxn('Dining Out', 'food', 'expense')">🍔 Dining</button>
@@ -102,7 +92,6 @@ export function initModals() {
             </div>
           </div>
 
-          <!-- Category Selection -->
           <div style="margin-bottom:18px;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
               <label for="txn-category" style="font-size:12px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.5px;">
@@ -115,7 +104,6 @@ export function initModals() {
             <select id="txn-category" class="input" style="height:44px; font-size:14px; font-weight:500;"></select>
           </div>
 
-          <!-- Date Picker with Today shortcut -->
           <div style="margin-bottom:24px;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
               <label for="txn-date" style="font-size:12px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.5px;">
@@ -128,7 +116,6 @@ export function initModals() {
             <input id="txn-date" type="date" required class="input" style="height:44px;">
           </div>
 
-          <!-- Actions -->
           <div style="display:flex; gap:12px; align-items:center;">
             <button type="button" class="btn" style="flex:1; height:46px; font-weight:600;" onclick="window.floApp.closeModal('dlg-transaction')">
               Cancel
@@ -141,7 +128,6 @@ export function initModals() {
       </div>
     </dialog>
 
-    <!-- Budget Modal -->
     <dialog id="dlg-budget" class="native-modal" aria-labelledby="dlg-budget-title">
       <div class="modal-content">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
@@ -194,7 +180,6 @@ export function initModals() {
       </div>
     </dialog>
 
-    <!-- Custom Category Modal -->
     <dialog id="dlg-category" class="native-modal" aria-labelledby="dlg-cat-title">
       <div class="modal-content">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
@@ -217,7 +202,6 @@ export function initModals() {
       </div>
     </dialog>
 
-    <!-- Savings Goal Modal -->
     <dialog id="dlg-goal" class="native-modal" aria-labelledby="dlg-goal-title">
       <div class="modal-content">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
@@ -261,7 +245,6 @@ export function initModals() {
       </div>
     </dialog>
 
-    <!-- Recurring Rule Modal -->
     <dialog id="dlg-recurring" class="native-modal" aria-labelledby="dlg-rec-title">
       <div class="modal-content">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
@@ -312,7 +295,6 @@ export function initModals() {
       </div>
     </dialog>
 
-    <!-- Safe Import Preview Modal -->
     <dialog id="dlg-import" class="native-modal" aria-labelledby="dlg-import-title">
       <div class="modal-content">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">

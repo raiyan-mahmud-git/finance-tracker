@@ -27,9 +27,6 @@ import {
   mergeData,
 } from '../src/modules/importExport.ts';
 
-// -------------------------------------------------------------
-// BUG 1: XSS in transaction descriptions
-// -------------------------------------------------------------
 test('Bug 1 (XSS): escapeHtml escapes script and malicious tags', () => {
   const maliciousInput = '<img src=x onerror="alert(1)"> & "hello" \'world\'';
   const escaped = escapeHtml(maliciousInput);
@@ -41,9 +38,6 @@ test('Bug 1 (XSS): escapeHtml escapes script and malicious tags', () => {
   );
 });
 
-// -------------------------------------------------------------
-// BUG 2: Chart labels anchored to viewed month, not static Jan-Jun
-// -------------------------------------------------------------
 test('Bug 2 (Chart Labels): 6-month range anchors dynamically to viewed month', () => {
   const viewedYM = { year: 2026, month: 10 }; // Nov (0-indexed 10)
   const range = getSixMonthRange(viewedYM);
@@ -68,9 +62,6 @@ test('Bug 2 (Chart Labels): 6-month range anchors dynamically to viewed month', 
   expect(febRange[5]).toEqual({ year: 2027, month: 1 }); // Feb 2027
 });
 
-// -------------------------------------------------------------
-// BUG 3: Cumulative balance vs monthly net balance
-// -------------------------------------------------------------
 test('Bug 3 (Current Balance): cumulative balance counts all history, month net counts only viewed month', () => {
   const transactions = [
     { id: '1', date: '2026-03-15', amount: 50000, type: 'income' as const, category: 'salary', description: 'Salary', createdAt: 1 },
@@ -87,9 +78,6 @@ test('Bug 3 (Current Balance): cumulative balance counts all history, month net 
   expect(aprilSummary.net).toBe(-15000);
 });
 
-// -------------------------------------------------------------
-// BUG 4: Month math breaks on 29th-31st (Jan 31 + 1 month bug)
-// -------------------------------------------------------------
 test('Bug 4 (Month Math): safe addMonths handles Jan 31st and year boundaries correctly', () => {
   const jan = { year: 2026, month: 0 };
   const nextMonth = addMonths(jan, 1);
@@ -102,9 +90,6 @@ test('Bug 4 (Month Math): safe addMonths handles Jan 31st and year boundaries co
   expect(addMonths(jan2026, -1)).toEqual({ year: 2025, month: 11 }); // Dec 2025
 });
 
-// -------------------------------------------------------------
-// BUG 5: Timezone date formatting and stable tiebreaker sort
-// -------------------------------------------------------------
 test('Bug 5 (Timezone): getTodayLocalDateString returns local YYYY-MM-DD and sorting is stable', () => {
   const localDate = new Date(2026, 9, 18, 2, 30, 0);
   const dateStr = getTodayLocalDateString(localDate);
@@ -121,9 +106,6 @@ test('Bug 5 (Timezone): getTodayLocalDateString returns local YYYY-MM-DD and sor
   expect(txns[2].id).toBe('c');
 });
 
-// -------------------------------------------------------------
-// BUG 6: Money uses integer minor units and Intl.NumberFormat
-// -------------------------------------------------------------
 test('Bug 6 (Money): minor units eliminate float inaccuracies and format properly for BDT, JPY, USD', () => {
   const a = toMinorUnits(0.1, 'USD');
   const b = toMinorUnits(0.2, 'USD');
@@ -142,9 +124,6 @@ test('Bug 6 (Money): minor units eliminate float inaccuracies and format properl
   expect(jpyFormatted).toContain('5,000');
 });
 
-// -------------------------------------------------------------
-// BUG 7: Storage excludes transient UI state
-// -------------------------------------------------------------
 test('Bug 7 (UI State): persistent storage does not serialize transient UI filters or offsets', () => {
   const legacyWithUIState = {
     transactions: [{ id: '1', date: '2026-10-01', amount: 10.5, category: 'food' }],
@@ -167,9 +146,6 @@ test('Bug 7 (UI State): persistent storage does not serialize transient UI filte
   expect(migrated.settings.currency).toBe('USD');
 });
 
-// -------------------------------------------------------------
-// BUG 8: Safe import validation, preview, and merge/replace
-// -------------------------------------------------------------
 test('Bug 8 (Safe Import): rejects corrupted files, gives preview, and supports merge', () => {
   const invalid = validateAndPreviewJSON('{ invalid json ...');
   expect(invalid.valid).toBe(false);

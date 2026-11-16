@@ -1,15 +1,3 @@
-/**
- * Import and Export Layer
- *
- * Bugs & Requirements addressed:
- * - Bug #8: In the original app, `state = { ...state, ...imported }` blindly swallowed
- *   any untrusted JSON object, allowing prototype pollution or wiping state if corrupted.
- *   Here, we strictly validate JSON and CSV against schema, provide preview stats
- *   ("142 transactions, 6 budgets"), and support both Merge and Replace strategies.
- * - Excel UTF-8 BOM: Prepends `\uFEFF` to CSV exports so Microsoft Excel correctly displays
- *   non-ASCII characters and currency symbols such as BDT (৳), JPY (¥), EUR (€), etc.
- */
-
 import { DEFAULT_CATEGORIES } from './constants.ts';
 import { resolveCurrencyCode, toMinorUnits, fromMinorUnits } from './money.ts';
 import type { PersistentData, Transaction, Budget, Category, SavingsGoal, RecurringRule } from './types.ts';
@@ -26,9 +14,6 @@ export interface ImportPreview {
   data: PersistentData;
 }
 
-/**
- * Validates and parses raw JSON string into a structured preview.
- */
 export function validateAndPreviewJSON(jsonStr: string): ImportPreview {
   try {
     const parsed = JSON.parse(jsonStr);
@@ -164,19 +149,14 @@ export function validateAndPreviewJSON(jsonStr: string): ImportPreview {
   }
 }
 
-/**
- * Merges imported data with current data (avoiding duplicate transaction IDs).
- */
 export function mergeData(current: PersistentData, imported: PersistentData): PersistentData {
   const existingTxnIds = new Set(current.transactions.map(t => t.id));
   const newTxns = imported.transactions.filter(t => !existingTxnIds.has(t.id));
 
-  // Merge budgets by category
   const budgetMap = new Map<string, Budget>();
   current.budgets.forEach(b => budgetMap.set(b.category, b));
   imported.budgets.forEach(b => budgetMap.set(b.category, b)); // imported overrides or adds
 
-  // Merge categories by ID
   const catMap = new Map<string, Category>();
   current.categories.forEach(c => catMap.set(c.id, c));
   imported.categories.forEach(c => catMap.set(c.id, c));
@@ -191,9 +171,6 @@ export function mergeData(current: PersistentData, imported: PersistentData): Pe
   };
 }
 
-/**
- * Generates an Excel-compatible CSV string with UTF-8 BOM (`\uFEFF`).
- */
 export function exportTransactionsToCSV(transactions: Transaction[], currency: string): string {
   const BOM = '\uFEFF';
   const headers = ['ID', 'Date', 'Type', 'Category', 'Description', 'Amount', 'Currency'];
@@ -208,9 +185,6 @@ export function exportTransactionsToCSV(transactions: Transaction[], currency: s
   return BOM + [headers.join(','), ...rows].join('\r\n');
 }
 
-/**
- * Parses CSV text into a structured import preview.
- */
 export function parseTransactionsFromCSV(csvText: string, currentCurrency = 'USD'): ImportPreview {
   try {
     // Strip BOM if present
@@ -314,9 +288,6 @@ export function parseTransactionsFromCSV(csvText: string, currentCurrency = 'USD
   }
 }
 
-/**
- * Parses a single CSV line accounting for quoted commas and escaped quotes.
- */
 function parseCSVLine(line: string): string[] {
   const result: string[] = [];
   let current = '';

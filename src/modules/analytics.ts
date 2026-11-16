@@ -1,19 +1,3 @@
-/**
- * Financial Analytics and Calculations
- *
- * Bugs & Requirements addressed:
- * - Bug #3: In the legacy app, "Current balance" showed only `monthIncome - monthExpense`.
- *   We calculate the TRUE cumulative balance across all recorded transactions to date,
- *   and provide the viewed month's net balance separately.
- * - Budget calculations: Uncapped percentage (allows >100% over-budget state),
- *   warning threshold at >= 80%, and optional rollover surplus/deficit carry-over.
- * - Insights:
- *   - Biggest category change vs last month.
- *   - Average daily spend in current month.
- *   - Projected month-end spend.
- *   - "On track" vs "Over pace" diagnostic.
- */
-
 import { addMonths, getDaysInMonth, isDateInYearMonth } from './dates.ts';
 import type { YearMonth } from './dates.ts';
 import type { Budget, Transaction } from './types.ts';
@@ -50,19 +34,12 @@ export interface InsightsData {
   };
 }
 
-/**
- * Calculates true cumulative balance across ALL transactions.
- * Fixes Bug #3.
- */
 export function calculateCumulativeBalance(transactions: Transaction[]): number {
   return transactions.reduce((acc, t) => {
     return t.type === 'income' ? acc + t.amount : acc - t.amount;
   }, 0);
 }
 
-/**
- * Calculates income, expense, and net for a specific month.
- */
 export function calculateMonthSummary(transactions: Transaction[], ym: YearMonth): MonthSummary {
   const monthTxns = transactions.filter(t => isDateInYearMonth(t.date, ym));
   let income = 0;
@@ -89,10 +66,6 @@ export function calculateMonthSummary(transactions: Transaction[], ym: YearMonth
   };
 }
 
-/**
- * Computes status for each budget in a given month.
- * Respects over-budget (>100%), 80% warning threshold, and rollover carryover.
- */
 export function calculateBudgetStatuses(
   budgets: Budget[],
   transactions: Transaction[],
@@ -101,7 +74,6 @@ export function calculateBudgetStatuses(
   const currentMonthTxns = transactions.filter(t => isDateInYearMonth(t.date, ym));
 
   return budgets.map(b => {
-    // Current month spend
     const spent = currentMonthTxns
       .filter(t => t.type === 'expense' && t.category === b.category)
       .reduce((acc, t) => acc + t.amount, 0);
@@ -138,10 +110,6 @@ export function calculateBudgetStatuses(
   });
 }
 
-/**
- * Calculates spending insights: daily average, projected spend, pace diagnosis,
- * and category changes compared to the prior month.
- */
 export function calculateInsights(
   transactions: Transaction[],
   ym: YearMonth,
@@ -153,7 +121,6 @@ export function calculateInsights(
 
   const daysInMonth = getDaysInMonth(ym.year, ym.month);
 
-  // Determine elapsed days in the viewed month
   const isCurrentCalendarMonth = today.getFullYear() === ym.year && today.getMonth() === ym.month;
   const elapsedDays = isCurrentCalendarMonth
     ? Math.max(1, today.getDate())
@@ -162,7 +129,6 @@ export function calculateInsights(
   const avgDailySpend = Math.round(totalCurrentSpend / elapsedDays);
   const projectedMonthEndSpend = Math.round(avgDailySpend * daysInMonth);
 
-  // Compare to previous month
   const prevYM = addMonths(ym, -1);
   const prevMonthTxns = transactions.filter(t => isDateInYearMonth(t.date, prevYM));
   const prevMonthExpenses = prevMonthTxns.filter(t => t.type === 'expense');
@@ -188,7 +154,6 @@ export function calculateInsights(
     paceMessage = 'No expenses recorded for this month yet.';
   }
 
-  // Category change analysis
   const currentByCat: Record<string, number> = {};
   currentMonthExpenses.forEach(t => {
     currentByCat[t.category] = (currentByCat[t.category] || 0) + t.amount;

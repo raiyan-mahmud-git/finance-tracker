@@ -1,14 +1,3 @@
-/**
- * Transactions Activity View
- *
- * Requirements & Bug Fixes:
- * - Bug #1 (XSS): All user-generated descriptions and custom categories escaped safely.
- * - Bug #9: Highlights selected day if user jumped to a specific date from the calendar.
- * - Edit and Delete actions with Undo toast restoration.
- * - Search query filter, Type filter chips, Custom Date Range picker, and Sorting options.
- * - Pagination controls for long lists.
- */
-
 import { compareTransactionsDesc, isDateInYearMonth } from '../dates.ts';
 import { formatMoney } from '../money.ts';
 import { escapeHtml } from '../security.ts';
@@ -26,10 +15,8 @@ export function renderTransactionsView(state: AppState): string {
   const pageSize = state.ui.pageSize;
   const selectedDay = state.ui.selectedDay;
 
-  // Filter pipeline
   let filtered: Transaction[] = [...state.data.transactions];
 
-  // 1. Type filter
   if (filter === 'income') {
     filtered = filtered.filter(t => t.type === 'income');
   } else if (filter === 'expense') {
@@ -45,14 +32,12 @@ export function renderTransactionsView(state: AppState): string {
     }
   }
 
-  // 2. Day highlight filter (if selected in calendar)
   if (selectedDay !== null) {
     const dayStr = String(selectedDay).padStart(2, '0');
     const targetDatePrefix = `${ym.year}-${String(ym.month + 1).padStart(2, '0')}-${dayStr}`;
     filtered = filtered.filter(t => t.date === targetDatePrefix);
   }
 
-  // 3. Search query
   if (query) {
     filtered = filtered.filter(t => {
       const cat = categories.find(c => c.id === t.category);
@@ -61,7 +46,6 @@ export function renderTransactionsView(state: AppState): string {
     });
   }
 
-  // 4. Sorting
   if (sort === 'date-desc') {
     filtered.sort(compareTransactionsDesc);
   } else if (sort === 'date-asc') {
@@ -72,7 +56,6 @@ export function renderTransactionsView(state: AppState): string {
     filtered.sort((a, b) => a.amount - b.amount);
   }
 
-  // 5. Pagination
   const totalCount = filtered.length;
   const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
   const currentPage = Math.min(page, totalPages);
@@ -81,10 +64,10 @@ export function renderTransactionsView(state: AppState): string {
 
   return `
     <div class="transactions-view animate-fade-in" style="display:flex; flex-direction:column; gap:20px;">
-      <!-- Search & Filters Toolbar -->
+
       <div class="card transaction-filters" style="padding:16px 20px;">
         <div class="transaction-toolbar" style="display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between; margin-bottom:14px;">
-          <!-- Search input -->
+
           <div style="position:relative; flex:1; min-width:240px;">
             <span style="position:absolute; left:12px; top:11px; font-size:14px; color:var(--text-muted);">🔍</span>
             <input
@@ -99,7 +82,6 @@ export function renderTransactionsView(state: AppState): string {
             >
           </div>
 
-          <!-- Sort Dropdown -->
           <div style="display:flex; align-items:center; gap:8px;">
             <label for="sort-select" style="font-size:12px; font-weight:600; color:var(--text-muted); white-space:nowrap;">Sort by:</label>
             <select
@@ -117,7 +99,6 @@ export function renderTransactionsView(state: AppState): string {
           </div>
         </div>
 
-        <!-- Filter Chips & Custom Date Range -->
         <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
           <button class="filter-chip ${filter === 'all' && selectedDay === null ? 'active' : ''}" onclick="window.floApp.setFilter('all')">
             All (${state.data.transactions.length})
@@ -143,7 +124,6 @@ export function renderTransactionsView(state: AppState): string {
           ` : ''}
         </div>
 
-        <!-- Custom Date Range Subpanel -->
         ${filter === 'custom' ? `
           <div style="display:flex; gap:12px; align-items:center; margin-top:14px; padding-top:14px; border-top:1px solid var(--border-soft); flex-wrap:wrap;">
             <div style="display:flex; align-items:center; gap:6px;">
@@ -159,7 +139,6 @@ export function renderTransactionsView(state: AppState): string {
         ` : ''}
       </div>
 
-      <!-- Transactions List -->
       <div class="card" style="padding:0; overflow:hidden;" role="region" aria-label="Transactions list">
         ${pagedTxns.length > 0 ? `
           <div style="display:flex; flex-direction:column;">
@@ -174,7 +153,7 @@ export function renderTransactionsView(state: AppState): string {
                       ${cat.emoji}
                     </span>
                     <div style="min-width:0; flex:1;">
-                      <!-- Bug #1 fix: escapeHtml prevents XSS injection -->
+
                       <div style="font-weight:600; font-size:14px; color:var(--text-primary); text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">
                         ${escapeHtml(t.description || (isIncome ? 'Income' : 'Expense'))}
                       </div>
@@ -187,7 +166,6 @@ export function renderTransactionsView(state: AppState): string {
                     </div>
                   </div>
 
-                  <!-- Amount & Edit/Delete Action Buttons -->
                   <div class="txn-row-trailing" style="display:flex; align-items:center; gap:16px; margin-left:12px;">
                     <div style="font-weight:700; font-size:16px; color:${isIncome ? 'var(--income)' : 'var(--expense)'}; white-space:nowrap; display:inline-flex; align-items:baseline;" class="money-value">
                       ${isIncome ? '+' : '-'}${formatMoney(t.amount, currency)}
@@ -220,7 +198,6 @@ export function renderTransactionsView(state: AppState): string {
           </div>
         `}
 
-        <!-- Pagination Controls -->
         ${totalPages > 1 ? `
           <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 20px; background:var(--bg-elevated); border-top:1px solid var(--border-soft); font-size:13px;">
             <div style="color:var(--text-muted);">

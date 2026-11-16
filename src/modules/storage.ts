@@ -1,17 +1,3 @@
-/**
- * Storage and Migration Layer
- *
- * Bugs & Requirements addressed:
- * - Bug #7: UI state (currentMonthOffset, currentFilter, searchQuery, currentType) was saved
- *   to localStorage alongside financial data in the legacy version, causing the app to open
- *   on stale filters. We persist ONLY domain data and user settings.
- * - Non-breaking Migration: Automatically migrates from legacy 'flo_state' and 'flo_theme'
- *   localStorage keys, converting floating point dollars to integer minor units, resolving
- *   currency symbols into ISO codes, and upgrading schema to version 2.
- * - Error Surfacing: Rather than silently swallowing storage quota errors with `catch(e) {}`,
- *   we notify callers with structured error messages.
- */
-
 import { DEFAULT_CATEGORIES, CURRENT_SCHEMA_VERSION, STORAGE_KEY_V2, LEGACY_STORAGE_KEY_STATE, LEGACY_STORAGE_KEY_THEME } from './constants.ts';
 import { toMinorUnits, resolveCurrencyCode } from './money.ts';
 import type { PersistentData, AppSettings } from './types.ts';
@@ -37,13 +23,9 @@ export interface StorageResult {
   error?: string;
 }
 
-/**
- * Loads persistent data from storage, running migrations if necessary.
- */
 export function loadPersistentData(): StorageResult {
   let migrated = false;
 
-  // 1. Check for v2 data
   try {
     const rawV2 = localStorage.getItem(STORAGE_KEY_V2);
     if (rawV2) {
@@ -59,7 +41,6 @@ export function loadPersistentData(): StorageResult {
     console.warn('Failed to parse v2 persistent data:', err);
   }
 
-  // 2. Check for legacy flo_state
   try {
     const rawLegacy = localStorage.getItem(LEGACY_STORAGE_KEY_STATE);
     if (rawLegacy) {
@@ -76,9 +57,7 @@ export function loadPersistentData(): StorageResult {
     console.warn('Failed to migrate legacy state:', err);
   }
 
-  // 3. Fallback to fresh state
   const defaultData = getDefaultPersistentData();
-  // Check if legacy theme was set
   try {
     const legacyTheme = localStorage.getItem(LEGACY_STORAGE_KEY_THEME);
     if (legacyTheme === 'light' || legacyTheme === 'dark') {
@@ -92,15 +71,11 @@ export function loadPersistentData(): StorageResult {
   };
 }
 
-/**
- * Migrates a legacy flo_state object into v2 schema.
- */
 export function migrateLegacyState(legacy: any): PersistentData {
   const result = getDefaultPersistentData();
   const currencyCode = resolveCurrencyCode(legacy.currency || '$');
   result.settings.currency = currencyCode;
 
-  // Read legacy theme
   try {
     const legacyTheme = localStorage.getItem(LEGACY_STORAGE_KEY_THEME);
     if (legacyTheme === 'light' || legacyTheme === 'dark') {
@@ -108,7 +83,6 @@ export function migrateLegacyState(legacy: any): PersistentData {
     }
   } catch {}
 
-  // Migrate transactions (converting float dollars to integer cents)
   if (Array.isArray(legacy.transactions)) {
     result.transactions = legacy.transactions
       .filter((t: any) => t && typeof t === 'object' && t.date)
@@ -123,7 +97,6 @@ export function migrateLegacyState(legacy: any): PersistentData {
       }));
   }
 
-  // Migrate budgets (converting float dollars to integer cents)
   if (Array.isArray(legacy.budgets)) {
     result.budgets = legacy.budgets
       .filter((b: any) => b && typeof b === 'object' && b.category)
@@ -138,9 +111,6 @@ export function migrateLegacyState(legacy: any): PersistentData {
   return result;
 }
 
-/**
- * Saves data to localStorage, stripping all transient UI properties.
- */
 export function savePersistentData(data: PersistentData): { success: boolean; error?: string } {
   try {
     const cleanData: PersistentData = {
@@ -166,9 +136,6 @@ export function savePersistentData(data: PersistentData): { success: boolean; er
   }
 }
 
-/**
- * Ensures loaded data conforms strictly to PersistentData types and invariants.
- */
 function sanitizePersistentData(input: any): PersistentData {
   const defaultData = getDefaultPersistentData();
   const currencyCode = resolveCurrencyCode(input.settings?.currency || 'USD');

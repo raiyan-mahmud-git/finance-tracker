@@ -1,14 +1,3 @@
-/**
- * Reactive Store with Pub/Sub Architecture
- *
- * Requirements:
- * - Single source of truth for the entire application.
- * - Decouples persistent domain data from ephemeral UI state.
- * - Automatically writes changes to storage and notifies subscribers.
- * - Provides undo stack with toast announcements.
- * - Automatically processes due recurring transactions on load.
- */
-
 import { DEFAULT_CATEGORIES } from './constants.ts';
 import { getCurrentYearMonth, getTodayLocalDateString, addMonths } from './dates.ts';
 import type { YearMonth } from './dates.ts';
@@ -98,14 +87,12 @@ class Store {
       },
     };
 
-    // Populate lastCategoryByDescription from past transactions
     for (const t of this.state.data.transactions) {
       if (t.description && t.category) {
         this.state.ui.lastCategoryByDescription[t.description.trim().toLowerCase()] = t.category;
       }
     }
 
-    // Automatically check for due recurring transactions
     this.processRecurringRules();
   }
 
@@ -133,9 +120,6 @@ class Store {
     }
   }
 
-  // -------------------------------------------------------------
-  // RECURRING PROCESSOR
-  // -------------------------------------------------------------
   public processRecurringRules() {
     if (!this.state.data.recurringRules.length) return;
     const { newTransactions, updatedRules } = generateRecurringTransactions(
@@ -152,9 +136,6 @@ class Store {
     }
   }
 
-  // -------------------------------------------------------------
-  // TRANSACTIONS
-  // -------------------------------------------------------------
   public addTransaction(txn: Omit<Transaction, 'id' | 'createdAt'>) {
     const newTxn: Transaction = {
       ...txn,
@@ -192,7 +173,6 @@ class Store {
     this.persist();
     this.notify();
 
-    // Undo toast
     this.showToast(`Deleted "${removed.description}"`, () => {
       this.state.data.transactions.splice(idx, 0, removed);
       this.persist();
@@ -200,9 +180,6 @@ class Store {
     });
   }
 
-  // -------------------------------------------------------------
-  // BUDGETS
-  // -------------------------------------------------------------
   public saveBudget(category: string, limitMinorUnits: number, rollover = false) {
     const existingIdx = this.state.data.budgets.findIndex(b => b.category === category);
     if (existingIdx !== -1) {
@@ -236,9 +213,6 @@ class Store {
     });
   }
 
-  // -------------------------------------------------------------
-  // CATEGORIES
-  // -------------------------------------------------------------
   public addCategory(cat: Omit<Category, 'id' | 'isCustom'>) {
     const id = `cat-${cat.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${Date.now().toString(36).slice(-3)}`;
     this.state.data.categories.push({
@@ -260,7 +234,6 @@ class Store {
   }
 
   public deleteCategory(id: string, reassignToId = 'other') {
-    // Cannot delete if only 1 category remains
     if (this.state.data.categories.length <= 1) return;
 
     const idx = this.state.data.categories.findIndex(c => c.id === id);
@@ -269,13 +242,11 @@ class Store {
     const removedCat = this.state.data.categories[idx];
     this.state.data.categories.splice(idx, 1);
 
-    // Reassign transactions
     const affectedTxns = this.state.data.transactions.filter(t => t.category === id);
     affectedTxns.forEach(t => {
       t.category = reassignToId;
     });
 
-    // Remove or reassign budget
     this.state.data.budgets = this.state.data.budgets.filter(b => b.category !== id);
 
     this.persist();
@@ -284,9 +255,6 @@ class Store {
     this.showToast(`Deleted category "${removedCat.name}" (reassigned ${affectedTxns.length} txns to "${reassignToId}")`);
   }
 
-  // -------------------------------------------------------------
-  // RECURRING RULES
-  // -------------------------------------------------------------
   public addRecurringRule(rule: Omit<RecurringRule, 'id'>) {
     const newRule: RecurringRule = {
       ...rule,
@@ -314,9 +282,6 @@ class Store {
     this.notify();
   }
 
-  // -------------------------------------------------------------
-  // SAVINGS GOALS
-  // -------------------------------------------------------------
   public addSavingsGoal(goal: Omit<SavingsGoal, 'id'>) {
     this.state.data.savingsGoals.push({
       ...goal,
@@ -350,9 +315,6 @@ class Store {
     this.notify();
   }
 
-  // -------------------------------------------------------------
-  // SETTINGS & UI ACTIONS
-  // -------------------------------------------------------------
   public setCurrency(currency: string) {
     this.state.data.settings.currency = currency;
     this.persist();
@@ -477,12 +439,10 @@ class Store {
     const pyStr = String(prevYM.year);
 
     const sampleTransactions: Transaction[] = [
-      // Past month
       { id: 's-p1', date: `${pyStr}-${pmStr}-01`, amount: 480000, type: 'income', category: 'salary', description: 'Tech Monthly Salary', createdAt: Date.now() - 35 * 86400000 },
       { id: 's-p2', date: `${pyStr}-${pmStr}-05`, amount: 120000, type: 'expense', category: 'housing', description: 'Apartment Rent', createdAt: Date.now() - 34 * 86400000 },
       { id: 's-p3', date: `${pyStr}-${pmStr}-10`, amount: 45000, type: 'expense', category: 'groceries', description: 'Supermarket Groceries', createdAt: Date.now() - 30 * 86400000 },
       { id: 's-p4', date: `${pyStr}-${pmStr}-18`, amount: 18000, type: 'expense', category: 'food', description: 'Weekend Sushi Dinner', createdAt: Date.now() - 25 * 86400000 },
-      // Current month
       { id: 's-c1', date: `${yStr}-${mStr}-01`, amount: 480000, type: 'income', category: 'salary', description: 'Tech Monthly Salary', createdAt: Date.now() - 15 * 86400000 },
       { id: 's-c2', date: `${yStr}-${mStr}-02`, amount: 120000, type: 'expense', category: 'housing', description: 'Apartment Rent', createdAt: Date.now() - 14 * 86400000 },
       { id: 's-c3', date: `${yStr}-${mStr}-04`, amount: 8500, type: 'expense', category: 'utilities', description: 'Electricity & Gas bill', createdAt: Date.now() - 12 * 86400000 },

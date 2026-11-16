@@ -1,17 +1,3 @@
-/**
- * Flo — Personal Finance Tracker
- * Application Entry Point & Controller
- *
- * Requirements implemented:
- * - Pure ES modules, vanilla TypeScript (zero React/Vue runtime overhead).
- * - Pub/Sub reactive store with pure render pipeline.
- * - WCAG 2.1 AA compliant keyboard shortcuts ('N' to quick-add, Escape to dismiss dialogs).
- * - Focus management: auto-focus amount input on dialog open.
- * - Auto-categorization memory based on description.
- * - PWA service worker registration & in-app install UI.
- * - Undo toast system with screen-reader live announcements.
- */
-
 import './index.css';
 import { getTodayLocalDateString } from './modules/dates.ts';
 import { exportTransactionsToCSV, parseTransactionsFromCSV, validateAndPreviewJSON, mergeData, ImportPreview } from './modules/importExport.ts';
@@ -28,11 +14,9 @@ import { renderSettingsView } from './modules/views/SettingsView.ts';
 import { escapeHtml } from './modules/security.ts';
 import type { Category, Transaction } from './modules/types.ts';
 
-// Pending import state
 let pendingImport: ImportPreview | null = null;
 let deferredInstallPrompt: any = null;
 
-// PWA beforeinstallprompt handler
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredInstallPrompt = e;
@@ -76,16 +60,11 @@ function renderInstallButton() {
   }
 }
 
-/**
- * Main application render function.
- */
 function renderApp(state: AppState) {
   const appEl = document.getElementById('app');
   if (!appEl) return;
 
-  // Header & Navbar
   const navbarHtml = renderNavbar(state);
-  // Active View Content
   let viewHtml = '';
   switch (state.ui.activeView) {
     case 'dashboard':
@@ -107,10 +86,8 @@ function renderApp(state: AppState) {
       viewHtml = renderDashboardView(state);
   }
 
-  // Mobile Bottom Navigation Bar
   const mobileBarHtml = renderMobileBottomBar(state);
 
-  // Toast HTML
   const toastHtml = state.ui.toast ? `
     <div class="toast-container" role="status" aria-live="polite">
       <div class="toast">
@@ -125,7 +102,6 @@ function renderApp(state: AppState) {
     </div>
   ` : '<div class="toast-container" role="status" aria-live="polite"></div>';
 
-  // Offline notification banner
   const offlineHtml = !navigator.onLine ? `
     <div style="background:var(--amber); color:white; font-size:12px; font-weight:600; text-align:center; padding:6px; position:sticky; top:0; z-index:90;">
       ⚡ Offline Mode — Changes are saved locally to your device.
@@ -150,14 +126,10 @@ function renderApp(state: AppState) {
   updateCategoryDropdowns();
 }
 
-/**
- * Updates categories in active modal selects.
- */
 function updateCategoryDropdowns() {
   const state = store.getState();
   const cats = state.data.categories;
 
-  // Transaction category select
   const txnCatSel = document.getElementById('txn-category') as HTMLSelectElement | null;
   if (txnCatSel) {
     txnCatSel.innerHTML = cats.map(c => `
@@ -165,7 +137,6 @@ function updateCategoryDropdowns() {
     `).join('');
   }
 
-  // Budget category select
   const budgetCatSel = document.getElementById('budget-category') as HTMLSelectElement | null;
   if (budgetCatSel) {
     budgetCatSel.innerHTML = cats.map(c => `
@@ -173,7 +144,6 @@ function updateCategoryDropdowns() {
     `).join('');
   }
 
-  // Recurring category select
   const recCatSel = document.getElementById('rec-category') as HTMLSelectElement | null;
   if (recCatSel) {
     recCatSel.innerHTML = cats.map(c => `
@@ -181,7 +151,6 @@ function updateCategoryDropdowns() {
     `).join('');
   }
 
-  // Category Manager list
   const catList = document.getElementById('category-manager-list');
   if (catList) {
     catList.innerHTML = cats.map(c => `
@@ -201,9 +170,6 @@ function updateCategoryDropdowns() {
   }
 }
 
-// -------------------------------------------------------------
-// GLOBAL CONTROLLER API (window.floApp)
-// -------------------------------------------------------------
 (window as any).floApp = {
   switchView: (view: any) => store.setView(view),
   changeMonth: (delta: number) => store.changeMonth(delta),
@@ -239,7 +205,6 @@ function updateCategoryDropdowns() {
     if (dropdown) dropdown.style.display = 'none';
   },
 
-  // Modals
   closeModal: (id: string) => closeDialog(id),
 
   getTodayLocalDateString: () => getTodayLocalDateString(),
@@ -275,7 +240,6 @@ function updateCategoryDropdowns() {
     (window as any).floApp.setTxnModalType('expense');
 
     dlg.showModal();
-    // Auto-focus amount field for instant entry
     setTimeout(() => {
       document.getElementById('txn-amount')?.focus();
     }, 50);
@@ -330,7 +294,6 @@ function updateCategoryDropdowns() {
   },
 
   onTxnDescInput: (descVal: string) => {
-    // Remember last category per description
     const key = descVal.trim().toLowerCase();
     const rememberedCategory = store.getState().ui.lastCategoryByDescription[key];
     if (rememberedCategory) {
@@ -384,7 +347,6 @@ function updateCategoryDropdowns() {
     store.deleteTransaction(id);
   },
 
-  // Filters & Search
   setFilter: (f: any) => store.setFilter(f),
   handleSearchInput: (q: string) => store.setSearchQuery(q),
   handleSortChange: (sort: any) => store.setSortOrder(sort),
@@ -407,7 +369,6 @@ function updateCategoryDropdowns() {
     store.setSearchQuery('');
   },
 
-  // Budgets
   openAddBudgetModal: () => {
     const dlg = document.getElementById('dlg-budget') as HTMLDialogElement;
     if (!dlg) return;
@@ -441,7 +402,6 @@ function updateCategoryDropdowns() {
   },
   deleteBudget: (id: string) => store.deleteBudget(id),
 
-  // Custom Categories
   openCategoryModal: () => {
     const dlg = document.getElementById('dlg-category') as HTMLDialogElement;
     if (dlg) {
@@ -468,7 +428,6 @@ function updateCategoryDropdowns() {
     }
   },
 
-  // Savings Goals
   openAddGoalModal: () => {
     const dlg = document.getElementById('dlg-goal') as HTMLDialogElement;
     if (!dlg) return;
@@ -544,7 +503,6 @@ function updateCategoryDropdowns() {
   },
   deleteGoal: (id: string) => store.deleteSavingsGoal(id),
 
-  // Recurring Rules
   openAddRecurringModal: () => {
     const dlg = document.getElementById('dlg-recurring') as HTMLDialogElement;
     if (!dlg) return;
@@ -579,7 +537,6 @@ function updateCategoryDropdowns() {
   togglePauseRecurring: (id: string) => store.togglePauseRecurringRule(id),
   deleteRecurring: (id: string) => store.deleteRecurringRule(id),
 
-  // Settings & Currency
   updateCurrency: (c: string) => store.setCurrency(c),
   updateTheme: (t: any) => store.setTheme(t),
   toggleTheme: () => {
@@ -589,7 +546,6 @@ function updateCategoryDropdowns() {
     store.setTheme(next);
   },
 
-  // Export & Import
   exportJSON: () => {
     const data = store.getState().data;
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -724,14 +680,11 @@ function updateCategoryDropdowns() {
   },
 };
 
-// Global Keyboard Shortcut: Press 'N' to open Add Transaction modal
 window.addEventListener('keydown', (e) => {
-  // If user pressed Escape, close calendar dropdown
   if (e.key === 'Escape') {
     (window as any).floApp.closeCalendar();
   }
 
-  // Check if user is typing in an input, textarea, or select
   const activeTag = document.activeElement?.tagName.toLowerCase();
   if (activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select') {
     return;
@@ -743,7 +696,6 @@ window.addEventListener('keydown', (e) => {
   }
 });
 
-// Close dropdown on outside click
 document.addEventListener('click', (e) => {
   const container = document.getElementById('month-picker-container');
   const dropdown = document.getElementById('calendar-dropdown');
@@ -752,11 +704,9 @@ document.addEventListener('click', (e) => {
   }
 });
 
-// Online / Offline listener
 window.addEventListener('online', () => store.changeMonth(0));
 window.addEventListener('offline', () => store.changeMonth(0));
 
-// Initial Render and Store Subscription
 store.applyTheme();
 store.subscribe((state) => renderApp(state));
 renderApp(store.getState());

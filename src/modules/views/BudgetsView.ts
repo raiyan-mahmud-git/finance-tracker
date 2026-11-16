@@ -1,14 +1,3 @@
-/**
- * Budgets & Recurring Schedules View
- *
- * Requirements:
- * - Over-budget state: clearly highlights expenses exceeding 100% in vibrant red without clipping.
- * - Rollover option: unspent surplus from the prior month expands the current month's allowance.
- * - 80% warning threshold: triggers amber alert state to help users pace expenses.
- * - Add, Edit, and Delete budgets with Undo support.
- * - Recurring schedules manager: weekly/monthly automation with instant pause/resume toggles.
- */
-
 import { calculateBudgetStatuses } from '../analytics.ts';
 import { formatYearMonth } from '../dates.ts';
 import { formatMoney } from '../money.ts';
@@ -27,7 +16,7 @@ export function renderBudgetsView(state: AppState): string {
 
   return `
     <div class="budgets-view animate-fade-in" style="display:flex; flex-direction:column; gap:28px;">
-      <!-- Budgets Header -->
+
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
         <div>
           <h2 style="font-family:var(--font-display); font-size:22px; font-weight:800; color:var(--text-primary); letter-spacing:-0.5px;">
@@ -42,7 +31,6 @@ export function renderBudgetsView(state: AppState): string {
         </button>
       </div>
 
-      <!-- Budgets Grid -->
       ${statuses.length > 0 ? `
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:20px;">
           ${statuses.map(({ budget, spent, effectiveLimit, percentage, isOverBudget, isWarning, remaining }) => {
@@ -101,7 +89,6 @@ export function renderBudgetsView(state: AppState): string {
                   </div>
                 </div>
 
-                <!-- Numbers Row -->
                 <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px; flex-wrap:wrap; gap:6px;">
                   <div style="display:inline-flex; align-items:baseline; gap:4px; white-space:nowrap;">
                     <span style="font-size:22px; font-weight:700; color:${isOverBudget ? 'var(--expense)' : 'var(--text-primary)'};" class="money-value">
@@ -114,7 +101,6 @@ export function renderBudgetsView(state: AppState): string {
                   <div>${statusBadge}</div>
                 </div>
 
-                <!-- Uncapped Progress Bar with over-limit overflow styling -->
                 <div style="height:10px; background:var(--border-soft); border-radius:5px; overflow:hidden; position:relative;">
                   <div style="width:${barFillPct}%; height:100%; background:${barColor}; border-radius:5px; transition:width 0.3s ease;"></div>
                 </div>
@@ -138,7 +124,6 @@ export function renderBudgetsView(state: AppState): string {
         </div>
       `}
 
-      <!-- RECURRING TRANSACTIONS SECTION -->
       <div style="margin-top:20px; padding-top:24px; border-top:1px solid var(--border-soft);">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:12px;">
           <div>

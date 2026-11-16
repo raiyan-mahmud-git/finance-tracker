@@ -1,22 +1,8 @@
-/**
- * Lightweight, accessible SVG charts
- *
- * Requirements:
- * - 6-Month bar chart: dynamically anchored to viewed month with real month labels.
- * - Donut chart: category spending distribution with center total and interactive legend.
- * - Line/Area chart: net cash flow / balance trend over time with smooth SVG gradient.
- * - Accessible: ARIA labels, semantic roles, focusable data points, and keyboard navigation.
- * - Zero third-party heavy dependencies.
- */
-
 import { addMonths, formatYearMonth, getSixMonthRange, isDateInYearMonth } from './dates.ts';
 import type { YearMonth } from './dates.ts';
 import { formatMoney, formatMoneyCompact } from './money.ts';
 import type { Category, Transaction } from './types.ts';
 
-// -------------------------------------------------------------
-// 1. 6-MONTH COMPARISON BAR CHART (INCOME VS EXPENSE)
-// -------------------------------------------------------------
 export function renderBarChartSVG(
   transactions: Transaction[],
   viewedYM: YearMonth,
@@ -63,15 +49,15 @@ export function renderBarChartSVG(
 
     return `
       <g class="bar-group" tabindex="0" role="group" aria-label="${d.label}: Income ${formatMoney(d.income, currency)}, Expense ${formatMoney(d.expense, currency)}">
-        <!-- Income Bar -->
+
         <rect x="${incX}" y="${incY}" width="${barWidth}" height="${incH}" rx="3" fill="var(--income)" opacity="0.9" class="chart-bar-rect">
           <title>${d.label} Income: ${formatMoney(d.income, currency)}</title>
         </rect>
-        <!-- Expense Bar -->
+
         <rect x="${expX}" y="${expY}" width="${barWidth}" height="${expH}" rx="3" fill="var(--expense)" opacity="0.9" class="chart-bar-rect">
           <title>${d.label} Expense: ${formatMoney(d.expense, currency)}</title>
         </rect>
-        <!-- X-axis Label -->
+
         <text x="${groupCenterX}" y="${chartBottom + 18}" text-anchor="middle" font-size="11" font-weight="${d.isCurrent ? '700' : '550'}" fill="${d.isCurrent ? 'var(--indigo)' : 'var(--text-muted)'}">
           ${d.label.split(' ')[0]}
         </text>
@@ -82,7 +68,7 @@ export function renderBarChartSVG(
 
   return `
     <svg viewBox="0 0 ${width} ${height}" class="chart-svg" role="img" aria-label="6-month income and expense comparison chart" style="width:100%; height:auto; overflow:visible;">
-      <!-- Grid lines -->
+
       <line x1="0" y1="${chartBottom}" x2="${width}" y2="${chartBottom}" stroke="var(--border-soft)" stroke-width="1" />
       <line x1="0" y1="${chartTop + availHeight / 2}" x2="${width}" y2="${chartTop + availHeight / 2}" stroke="var(--border-soft)" stroke-dasharray="3 3" stroke-width="1" />
       <line x1="0" y1="${chartTop}" x2="${width}" y2="${chartTop}" stroke="var(--border-soft)" stroke-dasharray="3 3" stroke-width="1" />
@@ -91,9 +77,6 @@ export function renderBarChartSVG(
   `;
 }
 
-// -------------------------------------------------------------
-// 2. DONUT CHART (CATEGORY SPENDING DISTRIBUTION)
-// -------------------------------------------------------------
 export function renderDonutChartSVG(
   transactions: Transaction[],
   categories: Category[],
@@ -136,7 +119,6 @@ export function renderDonutChartSVG(
     const angle = fraction * 2 * Math.PI;
     const pct = Math.round(fraction * 100);
 
-    // Calculate arc start and end
     const startX = cx + radius * Math.cos(cumulativeAngle);
     const startY = cy + radius * Math.sin(cumulativeAngle);
     const endAngle = cumulativeAngle + angle;
@@ -145,7 +127,6 @@ export function renderDonutChartSVG(
 
     const largeArc = angle > Math.PI ? 1 : 0;
 
-    // SVG arc path
     let d = '';
     if (fraction >= 0.9999) {
       // Full circle workaround for SVG arc
@@ -179,7 +160,7 @@ export function renderDonutChartSVG(
   const svg = `
     <svg viewBox="0 0 200 200" class="donut-svg" role="img" aria-label="Spending breakdown by category. Total: ${formatMoney(totalExpense, currency)}" style="width:180px; height:180px;">
       ${paths.join('')}
-      <!-- Center text -->
+
       <text x="100" y="93" text-anchor="middle" font-size="10" text-transform="uppercase" fill="var(--text-muted)" letter-spacing="0.5">TOTAL SPENT</text>
       <text x="100" y="112" text-anchor="middle" font-family="var(--font-body)" font-size="16" font-weight="700" fill="var(--text-primary)">
         ${formatMoneyCompact(totalExpense, currency)}
@@ -193,15 +174,11 @@ export function renderDonutChartSVG(
   };
 }
 
-// -------------------------------------------------------------
-// 3. BALANCE / CASH FLOW TREND LINE/AREA CHART
-// -------------------------------------------------------------
 export function renderTrendAreaChartSVG(
   transactions: Transaction[],
   ym: YearMonth,
   currency: string
 ): string {
-  // Aggregate daily net for each day in the month
   const daysInMonth = new Date(ym.year, ym.month + 1, 0).getDate();
   const dailyNet: number[] = new Array(daysInMonth).fill(0);
 
@@ -213,7 +190,6 @@ export function renderTrendAreaChartSVG(
     }
   }
 
-  // Cumulative trend curve across days
   let running = 0;
   const points = dailyNet.map((net, i) => {
     running += net;
@@ -254,19 +230,19 @@ export function renderTrendAreaChartSVG(
           <stop offset="100%" stop-color="var(--indigo)" stop-opacity="0.0" />
         </linearGradient>
       </defs>
-      <!-- Zero reference line -->
+
       <line x1="${padLeft}" y1="${zeroY}" x2="${width - padRight}" y2="${zeroY}" stroke="var(--border-medium)" stroke-dasharray="3 3" />
-      <!-- Area fill -->
+
       <path d="${areaD}" fill="url(#areaGradient)" />
-      <!-- Stroke line -->
+
       <path d="${pathD}" fill="none" stroke="var(--indigo)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-      <!-- Sample dots -->
+
       ${coords.filter((_, i) => i === 0 || i === Math.floor(coords.length / 2) || i === coords.length - 1).map(c => `
         <circle cx="${c.x}" cy="${c.y}" r="4" fill="var(--indigo)" stroke="var(--bg-surface)" stroke-width="2" tabindex="0" role="graphics-symbol" aria-label="Day ${c.day}: ${formatMoney(c.val, currency)}">
           <title>Day ${c.day}: ${formatMoney(c.val, currency)}</title>
         </circle>
       `).join('')}
-      <!-- Day labels -->
+
       <text x="${padLeft}" y="${height - 8}" font-size="11" fill="var(--text-muted)">Day 1</text>
       <text x="${width / 2}" y="${height - 8}" text-anchor="middle" font-size="11" fill="var(--text-muted)">Day ${Math.round(daysInMonth / 2)}</text>
       <text x="${width - padRight}" y="${height - 8}" text-anchor="end" font-size="11" fill="var(--text-muted)">Day ${daysInMonth}</text>

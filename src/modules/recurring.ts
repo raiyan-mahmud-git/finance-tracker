@@ -1,19 +1,6 @@
-/**
- * Recurring Transactions Processor
- *
- * Requirements:
- * - Supports weekly and monthly recurring schedules.
- * - Generates missing occurrences up to today's date (or viewed month).
- * - Allows pausing/unpausing recurring rules.
- * - Ensures idempotency (does not generate duplicates).
- */
-
 import { addMonths, getTodayLocalDateString } from './dates.ts';
 import type { RecurringRule, Transaction } from './types.ts';
 
-/**
- * Checks for any active recurring rules and generates due transactions up to targetDate (default today).
- */
 export function generateRecurringTransactions(
   rules: RecurringRule[],
   existingTransactions: Transaction[],
@@ -51,7 +38,6 @@ export function generateRecurringTransactions(
       }
     }
 
-    // Step forward
     while (true) {
       const nextDate = getNextOccurrenceDate(lastDate, rule.frequency);
       if (nextDate > targetDateStr) break;
@@ -81,9 +67,6 @@ export function generateRecurringTransactions(
   return { newTransactions, updatedRules };
 }
 
-/**
- * Calculates next date string for weekly or monthly cadence without timezone shifts.
- */
 export function getNextOccurrenceDate(currentDateStr: string, frequency: 'weekly' | 'monthly'): string {
   const [yStr, mStr, dStr] = currentDateStr.split('-');
   const year = parseInt(yStr, 10);
@@ -91,7 +74,6 @@ export function getNextOccurrenceDate(currentDateStr: string, frequency: 'weekly
   const day = parseInt(dStr, 10);
 
   if (frequency === 'weekly') {
-    // Add 7 days
     const d = new Date(year, month, day + 7);
     const ny = d.getFullYear();
     const nm = String(d.getMonth() + 1).padStart(2, '0');

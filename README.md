@@ -119,13 +119,10 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ### Running Tests
 ```bash
-# Run unit test suite (Vitest)
 npm test
 
-# Run End-to-End browser tests (Playwright)
 npm run test:e2e
 
-# Run TypeScript typecheck / lint
 npm run lint
 ```
 

@@ -1,8 +1,3 @@
-/**
- * Savings Goals View
- * Tracks financial ambitions (Emergency Fund, Travel, Tech gadgets) with progress percentages and target dates.
- */
-
 import { formatMoney } from '../money.ts';
 import { escapeHtml } from '../security.ts';
 import type { AppState } from '../store.ts';
@@ -61,7 +56,6 @@ export function renderGoalsView(state: AppState): string {
                   </div>
                 </div>
 
-                <!-- Progress numbers -->
                 <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
                   <div style="display:inline-flex; align-items:baseline; gap:4px; white-space:nowrap;">
                     <span style="font-size:22px; font-weight:700; color:var(--text-primary);" class="money-value">
@@ -76,7 +70,6 @@ export function renderGoalsView(state: AppState): string {
                   </div>
                 </div>
 
-                <!-- Progress bar -->
                 <div style="height:10px; background:var(--border-soft); border-radius:5px; overflow:hidden; margin-bottom:14px;">
                   <div style="width:${pct}%; height:100%; background:${isCompleted ? 'var(--income)' : 'var(--indigo)'}; border-radius:5px; transition:width 0.3s ease;"></div>
                 </div>

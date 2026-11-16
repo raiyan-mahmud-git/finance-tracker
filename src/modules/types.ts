@@ -1,7 +1,3 @@
-/**
- * Type definitions for Flo personal finance tracker.
- */
-
 export type TransactionType = 'expense' | 'income';
 
 export interface Transaction {

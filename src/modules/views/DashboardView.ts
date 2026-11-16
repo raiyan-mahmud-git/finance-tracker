@@ -1,9 +1,3 @@
-/**
- * Dashboard View
- *
- * Clean, production-grade metrics with robust tabular numbers that never wrap or stretch.
- */
-
 import { calculateCumulativeBalance, calculateMonthSummary, calculateInsights } from '../analytics.ts';
 import { renderBarChartSVG, renderDonutChartSVG, renderTrendAreaChartSVG } from '../charts.ts';
 import { formatYearMonth, isDateInYearMonth } from '../dates.ts';
@@ -17,36 +11,28 @@ export function renderDashboardView(state: AppState): string {
   const transactions = state.data.transactions;
   const categories = state.data.categories;
 
-  // True cumulative balance across ALL transactions
   const cumulativeBalance = calculateCumulativeBalance(transactions);
-  // Viewed month summary
   const monthSummary = calculateMonthSummary(transactions, ym);
-  // Spending insights
   const insights = calculateInsights(transactions, ym);
 
-  // Month transactions for category listing
   const currentMonthTxns = transactions.filter(t => isDateInYearMonth(t.date, ym));
   const expenseTxns = currentMonthTxns.filter(t => t.type === 'expense');
 
-  // Group by category
   const byCat: Record<string, number> = {};
   expenseTxns.forEach(t => {
     byCat[t.category] = (byCat[t.category] || 0) + t.amount;
   });
   const sortedCategories = Object.entries(byCat).sort((a, b) => b[1] - a[1]);
 
-  // Donut chart
   const { svg: donutSvg, legendHtml } = renderDonutChartSVG(transactions, categories, ym, currency);
-  // 6-month bar chart
   const barChartSvg = renderBarChartSVG(transactions, ym, currency);
-  // Cash flow trend area chart
   const trendChartSvg = renderTrendAreaChartSVG(transactions, ym, currency);
 
   return `
     <div class="dashboard-view animate-fade-in" style="display:flex; flex-direction:column; gap:24px;">
-      <!-- Top Cards Row: True Cumulative Balance & Monthly Highlights -->
+
       <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:20px;">
-        <!-- Cumulative Balance Card -->
+
         <div class="card" style="overflow:hidden;">
           <div style="display:flex; justify-content:space-between; align-items:flex-start;">
             <div style="min-width:0; flex:1;">
@@ -68,7 +54,6 @@ export function renderDashboardView(state: AppState): string {
           </div>
         </div>
 
-        <!-- Monthly Income Card -->
         <div class="card" style="overflow:hidden;">
           <div style="display:flex; justify-content:space-between; align-items:flex-start;">
             <div style="min-width:0; flex:1;">
@@ -86,7 +71,6 @@ export function renderDashboardView(state: AppState): string {
           </div>
         </div>
 
-        <!-- Monthly Expense Card (strictly prevents '-' wrapping onto its own line) -->
         <div class="card" style="overflow:hidden;">
           <div style="display:flex; justify-content:space-between; align-items:flex-start;">
             <div style="min-width:0; flex:1;">
@@ -105,7 +89,6 @@ export function renderDashboardView(state: AppState): string {
         </div>
       </div>
 
-      <!-- Financial Insights Card -->
       <div class="card" style="border-left:4px solid ${insights.isOverPace ? 'var(--expense)' : 'var(--indigo)'};">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
           <div style="display:flex; align-items:center; gap:8px;">
@@ -147,9 +130,8 @@ export function renderDashboardView(state: AppState): string {
         </div>
       </div>
 
-      <!-- Charts Row -->
       <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(340px, 1fr)); gap:20px;">
-        <!-- 6-Month Comparison Bar Chart -->
+
         <div class="card">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
             <div>
@@ -172,7 +154,6 @@ export function renderDashboardView(state: AppState): string {
           ${barChartSvg}
         </div>
 
-        <!-- Donut Breakdown Chart -->
         <div class="card">
           <h3 style="font-size:15px; font-weight:700; color:var(--text-primary); margin-bottom:16px;">
             Expenses by Category
@@ -184,7 +165,6 @@ export function renderDashboardView(state: AppState): string {
         </div>
       </div>
 
-      <!-- Cash Flow Trend Area Chart -->
       <div class="card">
         <h3 style="font-size:15px; font-weight:700; color:var(--text-primary); margin-bottom:4px;">
           Monthly Cash Flow Trend
@@ -195,7 +175,6 @@ export function renderDashboardView(state: AppState): string {
         ${trendChartSvg}
       </div>
 
-      <!-- Top Categories -->
       <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
           <h3 style="font-size:15px; font-weight:700; color:var(--text-primary);">

@@ -14,9 +14,6 @@ import {
 } from '../src/modules/importExport.ts';
 import type { RecurringRule, Transaction, Budget } from '../src/modules/types.ts';
 
-// -------------------------------------------------------------
-// 1. RECURRING TRANSACTIONS GENERATION & PAUSE
-// -------------------------------------------------------------
 test('Recurring transactions: generates due occurrences and respects pause', () => {
   const rules: RecurringRule[] = [
     {
@@ -37,18 +34,15 @@ test('Recurring transactions: generates due occurrences and respects pause', () 
       category: 'health',
       description: 'Gym Membership',
       startDate: '2026-08-01',
-      paused: true, // PAUSED!
+      paused: true,
     },
   ];
 
   const existing: Transaction[] = [];
-  // Target date is Oct 18, 2026 -> should generate for 2026-08-01, 2026-09-01, 2026-10-01
   const result = generateRecurringTransactions(rules, existing, '2026-10-18');
 
-  // Paused gym rule should have 0 transactions generated
   expect(result.newTransactions.filter(t => t.recurringRuleId === 'rule-gym').length).toBe(0);
 
-  // Active subscription should generate 3 occurrences (Aug 1, Sep 1, Oct 1)
   const subTxns = result.newTransactions.filter(t => t.recurringRuleId === 'rule-sub');
   expect(subTxns.length).toBe(3);
   expect(subTxns.map(t => t.date)).toEqual(['2026-08-01', '2026-09-01', '2026-10-01']);
@@ -63,9 +57,6 @@ test('Recurring transactions: weekly schedule steps by 7 days', () => {
   expect(getNextOccurrenceDate('2026-10-25', 'weekly')).toBe('2026-11-01');
 });
 
-// -------------------------------------------------------------
-// 2. BUDGETS: OVER-LIMIT (>100%), 80% WARNING & ROLLOVER
-// -------------------------------------------------------------
 test('Budgets: computes over-budget, 80% warning, and rollover from prior month', () => {
   const budgets: Budget[] = [
     { id: 'b1', category: 'dining', limit: 20000, rollover: false }, // $200.00
@@ -77,10 +68,7 @@ test('Budgets: computes over-budget, 80% warning, and rollover from prior month'
     // Prior month (September 2026): groceries had $100 unspent ($300 limit - $200 spent)
     { id: 'p1', date: '2026-09-10', amount: 20000, type: 'expense', category: 'groceries', description: 'Sept Groceries', createdAt: 1 },
 
-    // Current month (October 2026):
-    // Dining: spent 24000 on 20000 limit -> 120% (OVER BUDGET!)
     { id: 'c1', date: '2026-10-05', amount: 24000, type: 'expense', category: 'dining', description: 'Steakhouse', createdAt: 2 },
-    // Travel: spent 8500 on 10000 limit -> 85% (WARNING!)
     { id: 'c2', date: '2026-10-07', amount: 8500, type: 'expense', category: 'travel', description: 'Train Ticket', createdAt: 3 },
     // Groceries: spent 35000. Normal limit 30000, but with rollover +10000 from Sept -> effective limit 40000!
     { id: 'c3', date: '2026-10-12', amount: 35000, type: 'expense', category: 'groceries', description: 'Oct Groceries', createdAt: 4 },
@@ -107,35 +95,24 @@ test('Budgets: computes over-budget, 80% warning, and rollover from prior month'
   expect(groceries.remaining).toBe(5000);
 });
 
-// -------------------------------------------------------------
-// 3. INSIGHTS CALCULATIONS
-// -------------------------------------------------------------
 test('Insights: daily average, projected month-end, and category comparisons', () => {
   const transactions: Transaction[] = [
-    // Previous month (September 2026): Total dining = 10000
     { id: '1', date: '2026-09-15', amount: 10000, type: 'expense', category: 'dining', description: 'Dinner', createdAt: 1 },
-    // Current month (October 2026): Total dining = 30000 (+20000 increase)
     { id: '2', date: '2026-10-05', amount: 30000, type: 'expense', category: 'dining', description: 'Dinner party', createdAt: 2 },
   ];
 
   const mockToday = new Date(2026, 9, 10); // Day 10 of Oct 2026
   const insights = calculateInsights(transactions, { year: 2026, month: 9 }, mockToday);
 
-  // Spent 30000 in 10 days = 3000 per day
   expect(insights.avgDailySpend).toBe(3000);
-  // Oct has 31 days -> projected spend = 3000 * 31 = 93000
   expect(insights.projectedMonthEndSpend).toBe(93000);
 
-  // Dining was the biggest increase
   expect(insights.biggestChangeCategory).toBeDefined();
   expect(insights.biggestChangeCategory?.categoryId).toBe('dining');
   expect(insights.biggestChangeCategory?.diff).toBe(20000);
   expect(insights.isOverPace).toBe(true);
 });
 
-// -------------------------------------------------------------
-// 4. CSV EXPORT & IMPORT ROUND-TRIP WITH EXCEL UTF-8 BOM
-// -------------------------------------------------------------
 test('CSV export/import: UTF-8 BOM preserves symbols and parses back correctly', () => {
   const txns: Transaction[] = [
     {
@@ -163,7 +140,6 @@ test('CSV export/import: UTF-8 BOM preserves symbols and parses back correctly',
   expect(csv.charCodeAt(0)).toBe(0xFEFF);
   expect(csv).toContain('Monthly Salary (with special chars: ৳ & ""quoted"")');
 
-  // Parse back
   const parsed = parseTransactionsFromCSV(csv, 'BDT');
   expect(parsed.valid).toBe(true);
   expect(parsed.transactionCount).toBe(2);

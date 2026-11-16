@@ -1,8 +1,3 @@
-/**
- * Mobile Bottom Tab Bar Component
- * Replaces hamburger navigation on small screens with an accessible, thumb-friendly tab bar.
- */
-
 import { AppState } from '../store.ts';
 
 export function renderMobileBottomBar(state: AppState): string {

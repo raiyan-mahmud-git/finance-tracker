@@ -1,15 +1,3 @@
-/**
- * Settings & Data Management View
- *
- * Requirements:
- * - Currency preferences (Intl.NumberFormat compliant ISO codes).
- * - Real Dark Mode following system preferences until user picks.
- * - JSON and CSV export/import with validation, preview, and Merge/Replace options.
- * - Excel UTF-8 BOM compatibility so currency symbols (e.g. BDT ৳) survive.
- * - Instant Sample Data button with full Undo support.
- * - Clear all records action.
- */
-
 import { SUPPORTED_CURRENCIES } from '../money.ts';
 import type { AppState } from '../store.ts';
 
@@ -19,13 +7,12 @@ export function renderSettingsView(state: AppState): string {
 
   return `
     <div class="settings-view animate-fade-in" style="display:flex; flex-direction:column; gap:24px; max-width:800px; margin:0 auto;">
-      <!-- Preferences Card -->
+
       <div class="card">
         <h2 style="font-size:18px; font-weight:700; color:var(--text-primary); margin-bottom:16px;">
           Preferences
         </h2>
 
-        <!-- Currency -->
         <div class="settings-row" style="display:flex; justify-content:space-between; align-items:center; padding:14px 0; border-bottom:1px solid var(--border-soft);">
           <div>
             <div style="font-weight:600; font-size:14px; color:var(--text-primary);">Base Currency</div>
@@ -46,7 +33,6 @@ export function renderSettingsView(state: AppState): string {
           </select>
         </div>
 
-        <!-- Theme -->
         <div class="settings-row" style="display:flex; justify-content:space-between; align-items:center; padding:14px 0; border-bottom:1px solid var(--border-soft);">
           <div>
             <div style="font-weight:600; font-size:14px; color:var(--text-primary);">Appearance Theme</div>
@@ -65,7 +51,6 @@ export function renderSettingsView(state: AppState): string {
           </select>
         </div>
 
-        <!-- Categories Manager -->
         <div class="settings-row" style="display:flex; justify-content:space-between; align-items:center; padding:14px 0;">
           <div>
             <div style="font-weight:600; font-size:14px; color:var(--text-primary);">Custom Categories</div>
@@ -77,7 +62,6 @@ export function renderSettingsView(state: AppState): string {
         </div>
       </div>
 
-      <!-- Sample Dataset Helper Card -->
       <div class="card sample-data-card" style="background:var(--bg-elevated); border:1px solid var(--border-medium);">
         <div class="sample-data-content" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
           <div class="sample-data-description">
@@ -99,13 +83,11 @@ export function renderSettingsView(state: AppState): string {
         </div>
       </div>
 
-      <!-- Data Backup & Transfer Card -->
       <div class="card">
         <h2 style="font-size:18px; font-weight:700; color:var(--text-primary); margin-bottom:16px;">
           Data Backup & Transfer
         </h2>
 
-        <!-- JSON Export/Import -->
         <div class="settings-row" style="display:flex; justify-content:space-between; align-items:center; padding:14px 0; border-bottom:1px solid var(--border-soft); flex-wrap:wrap; gap:8px;">
           <div>
             <div style="font-weight:600; font-size:14px; color:var(--text-primary);">JSON Full Backup</div>
@@ -117,7 +99,6 @@ export function renderSettingsView(state: AppState): string {
           </div>
         </div>
 
-        <!-- CSV Export/Import -->
         <div class="settings-row" style="display:flex; justify-content:space-between; align-items:center; padding:14px 0; border-bottom:1px solid var(--border-soft); flex-wrap:wrap; gap:8px;">
           <div>
             <div style="font-weight:600; font-size:14px; color:var(--text-primary);">Excel CSV Export / Import</div>
@@ -129,11 +110,9 @@ export function renderSettingsView(state: AppState): string {
           </div>
         </div>
 
-        <!-- Hidden file inputs -->
         <input type="file" id="json-file-input" accept=".json" style="display:none;" onchange="window.floApp.onJSONFileSelected(event)">
         <input type="file" id="csv-file-input" accept=".csv" style="display:none;" onchange="window.floApp.onCSVFileSelected(event)">
 
-        <!-- Clear Data -->
         <div class="settings-row" style="display:flex; justify-content:space-between; align-items:center; padding:14px 0;">
           <div>
             <div style="font-weight:600; font-size:14px; color:var(--expense);">Clear All Records</div>
@@ -145,7 +124,6 @@ export function renderSettingsView(state: AppState): string {
         </div>
       </div>
 
-      <!-- Privacy Note -->
       <div class="card" style="font-size:13px; color:var(--text-secondary); line-height:1.6;">
         <h3 style="font-weight:700; color:var(--text-primary); margin-bottom:8px;">
           🛡️ Privacy & Local Architecture
